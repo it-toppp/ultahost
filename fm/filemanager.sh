@@ -19,9 +19,8 @@ sed -i 's|proxy_read_timeout              300|proxy_read_timeout  1200|' /etc/ng
 
 #php
 sed -i 's|\[post_max_size\] = 256M|\[post_max_size\] = 5120M|' /usr/local/hestia/php/etc/php-fpm.conf
-sed -i 's|\[upload_max_filesize\] = 256M|\[post_max_size\] = 5120M|' /usr/local/hestia/php/etc/php-fpm.conf
+sed -i 's|\[upload_max_filesize\] = 256M|\[upload_max_filesize\] = 5120M|' /usr/local/hestia/php/etc/php-fpm.conf
 systemctl restart hestia
 #conf
 sed -i.bak -e "s/\$root\_path = \$\_SERVER\['DOCUMENT_ROOT'\];/\$root_path = \'\/home\/admin\';/g"    /usr/local/hestia/web/fm/config.php
 sed -i 's|max_upload_size_bytes = 2048|max_upload_size_bytes = 2048000000|' /usr/local/hestia/web/fm/config.php
-$max_upload_size_bytes = 2048;
