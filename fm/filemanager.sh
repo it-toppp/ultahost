@@ -1,10 +1,15 @@
 #!/bin/bash
 cd /usr/local/hestia/web/fm
 rm -f /usr/local/hestia/web/fm/index.php
+if [ ! -f tinyfilemanager.php ]; then
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/tinyfilemanager.php
-wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/translation.json
+fi
+if [ ! -f config.php ]; then
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/config.php
-wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/index.php
+fi
+if [ ! -f translation.json ]; then
+wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/translation.json
+fi
 #nginx
 sed -i 's|client_max_body_size            256m|client_max_body_size  5120m|' /usr/local/hestia/nginx/conf/nginx.conf
 #php
