@@ -1,6 +1,7 @@
 #!/bin/bash
 cd /usr/local/hestia/web/fm
 rm -f /usr/local/hestia/web/fm/index.php
+wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/index.php
 if [ ! -f tinyfilemanager.php ]; then
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/tinyfilemanager.php
 fi
