@@ -18,6 +18,7 @@ sed -i 's|proxy_send_timeout              180|proxy_send_timeout  1200|' /etc/ng
 sed -i 's|proxy_read_timeout              300|proxy_read_timeout  1200|' /etc/nginx/nginx.conf
 
 #php
+grep -rl  "_time] = 300" /usr/local/hestia/php/etc/ | xargs perl -p -i -e 's/_time] = 300/_time] = 1200/g'
 sed -i 's|\[post_max_size\] = 256M|\[post_max_size\] = 5120M|' /usr/local/hestia/php/etc/php-fpm.conf
 sed -i 's|\[upload_max_filesize\] = 256M|\[upload_max_filesize\] = 5120M|' /usr/local/hestia/php/etc/php-fpm.conf
 systemctl restart hestia
