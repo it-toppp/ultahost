@@ -13,6 +13,10 @@ wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/transl
 fi
 #nginx
 sed -i 's|client_max_body_size            256m|client_max_body_size  5120m|' /usr/local/hestia/nginx/conf/nginx.conf
+#sed -i 's|send_timeout                    60;|send_timeout  1200;|' /etc/nginx/nginx.conf
+sed -i 's|proxy_send_timeout              180|proxy_send_timeout  1200|' /etc/nginx/nginx.conf
+sed -i 's|proxy_read_timeout              300|proxy_read_timeout  1200|' /etc/nginx/nginx.conf
+
 #php
 sed -i 's|\[post_max_size\] = 256M|\[post_max_size\] = 5120M|' /usr/local/hestia/php/etc/php-fpm.conf
 sed -i 's|\[upload_max_filesize\] = 256M|\[post_max_size\] = 5120M|' /usr/local/hestia/php/etc/php-fpm.conf
