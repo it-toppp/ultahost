@@ -11,7 +11,7 @@ sed -i 's|client_max_body_size            256m|client_max_body_size  5120m|' /us
 #php
 echo php_admin_value[post_max_size] = 5260M >> /usr/local/hestia/php/etc/php-fpm.conf
 echo php_admin_value[post_max_size] = 5260M >> /usr/local/hestia/php/etc/php-fpm.conf
+systemctl restart hestia
 
-$root_path = '/home/admin';
 #conf
 sed -i.bak -e "s/\$root\_path = \$\_SERVER\['DOCUMENT_ROOT'\];/\$root_path = \'\/home\/admin\';/g"    /usr/local/hestia/web/fm/config.php
