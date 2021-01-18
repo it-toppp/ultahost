@@ -27,9 +27,8 @@ systemctl restart hestia
 sed -i.bak -e "s/\$root\_path = \$\_SERVER\['DOCUMENT_ROOT'\];/\$root_path = \'\/home\/admin\/web\';/g"    /usr/local/hestia/web/fm/config.php
 sed -i 's|max_upload_size_bytes = 2048|max_upload_size_bytes = 10000000000|' /usr/local/hestia/web/fm/config.php
 sed -i 's|"show_hidden":false|"show_hidden":true|' /usr/local/hestia/web/fm/config.php
-#sed -i 's|\$theme = 'light'\;|\$theme = 'dark'\;|' /usr/local/hestia/web/fm/config.php
 sed -i 's|use_auth = true|use_auth = false|' /usr/local/hestia/web/fm/config.php
-sed -i "s|theme = 'light'|theme = \'dark\'|" /usr/local/hestia/web/fm/config.php
+#sed -i "s|theme = 'light'|theme = \'dark\'|" /usr/local/hestia/web/fm/config.php
 
 chown root:admin config.php tinyfilemanager.php
 chmod 660 config.php tinyfilemanager.php
