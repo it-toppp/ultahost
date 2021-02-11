@@ -7,19 +7,10 @@ server {
     location = /favicon.ico { access_log off; log_not_found off; }
 
     # Maximum file upload size.
-    client_max_body_size 64M;
-
-    # Enable content compression for text types.
-    gzip on;
-    gzip_types text/plain text/css application/x-javascript image/svg+xml;
-    gzip_comp_level 1;
-    gzip_disable msie6;
-    gzip_http_version 1.0;
-    gzip_proxied any;
-    gzip_vary on;
+    client_max_body_size 6400M;
 
     location / {
-        proxy_pass  http://127.0.0.1:2368;
+        proxy_pass  http://127.0.0.1:3000;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header Host $http_host;
         proxy_set_header X-Forwarded-Proto https; 
