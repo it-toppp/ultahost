@@ -1,3 +1,5 @@
-'''cd /usr/local/hestia/data/templates/web/nginx'''
-'''wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/nodejs3000.stpl'''
-'''wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/nodejs3000.tpl'''
+ cd /usr/local/hestia/data/templates/web/nginx
+
+ wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/nodejs3000.stpl
+
+ wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/nodejs3000.tpl
