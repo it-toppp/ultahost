@@ -1,15 +1,18 @@
 #!/bin/bash
 cd /usr/local/hestia/web/fm
-rm -f /usr/local/hestia/web/fm/index.php
+mv /usr/local/hestia/web/fm/index.php index.php_old
 wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/index.php
 if [ ! -f tinyfilemanager.php ]; then
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/tinyfilemanager.php
+chmod 666 tinyfilemanager.php
 fi
 if [ ! -f config.php ]; then
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/config.php
+chmod 644 config.php
 fi
 if [ ! -f translation.json ]; then
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/translation.json
+chmod 644 translation.json
 fi
 
 #nginx
@@ -30,5 +33,5 @@ sed -i 's|"show_hidden":false|"show_hidden":true|' /usr/local/hestia/web/fm/tiny
 sed -i 's|use_auth = true|use_auth = false|' /usr/local/hestia/web/fm/config.php
 #sed -i "s|theme = 'light'|theme = \'dark\'|" /usr/local/hestia/web/fm/config.php
 
-chown root:admin config.php tinyfilemanager.php
-chmod 660 config.php tinyfilemanager.php
+#chown root:admin config.php tinyfilemanager.php
+#chmod 660 config.php tinyfilemanager.php
