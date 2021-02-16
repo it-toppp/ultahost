@@ -70,5 +70,4 @@ if ($config_file) {
 	   @chmod("../ffmpeg/ffmpeg", 0777);
 	}
 	
-	unlink($_SERVER['DOCUMENT_ROOT'] . "/installer.php");
 }
