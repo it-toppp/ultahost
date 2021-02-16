@@ -20,7 +20,7 @@ $sql_db_name = "'  . $_POST['sql_name'] . '";
 $site_url = "' . $_POST['site_url'] . '"; // e.g (http://example.com)
 
 // Purchase code
-$purchase_code = "' . $_POST['license'] . '";
+$purchase_code = "' . $_POST['purchase_code'] . '";
 ?>';
 
 $config_file = file_put_contents($config_file_name, $file_content);
