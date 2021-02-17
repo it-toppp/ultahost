@@ -25,15 +25,17 @@ $site_url = "' . $_POST['site_url'] . '"; // e.g (http://example.com)
 // Purchase code
 $purchase_code = "' . $_POST['purshase_code'] . '";
 ?>';
-           $success = '';
+     
+$config_file = file_put_contents($config_file_name, $file_content);
+if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/htaccess.txt')) {
+  $htaccess = file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/.htaccess', file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/htaccess.txt'));
+}
+
+            $success = '';
             $config_file_name = '../sys/config.php';
             $config_file = file_put_contents($config_file_name, $file_content);
 
-            $htaccess = @file_put_contents('../.htaccess', base64_decode($_POST['htaccessdata']));
-            $certificate = @file_put_contents('../cert.crt', base64_decode($_POST['certificatedata']));
-            $database = @file_put_contents('../database.sql', base64_decode($_POST['sqldata']));
-            $nginx = @file_put_contents('../nginx.server.conf', base64_decode($_POST['nginxdata']));
-
+        
             if ($config_file) {
                 $filename = '../database.sql';
                 // Temporary variable, used to store current query
