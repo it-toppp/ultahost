@@ -60,12 +60,16 @@ if ($config_file) {
 	   }
 	}
 	
-	if ($query) {
-        $query_one  = mysqli_query($con, "UPDATE `pxp_config` SET `value` = '" . mysqli_real_escape_string($con, 'PixelPhoto'). "' WHERE `name` = 'site_url'");
-        $query_one .= mysqli_query($con, "UPDATE `pxp_config` SET `value` = '" . mysqli_real_escape_string($con, 'PixelPhoto'). "' WHERE `name` = 'site_name'");
-        $query_one .= mysqli_query($con, "UPDATE `pxp_config` SET `value` = '" . mysqli_real_escape_string($con, 'example@domain.com'). "' WHERE `name` = 'site_email'");
-        $query_one .= mysqli_query($con, "UPDATE `pxp_config` SET `value` = '" . mysqli_real_escape_string($con, md5(microtime())). "' WHERE `name` = 'app_api_id'");
-        $query_one .= mysqli_query($con, "UPDATE `pxp_config` SET `value` = '" . mysqli_real_escape_string($con, md5(time())). "' WHERE `name` = 'app_api_key'");
-        $query_one .= mysqli_query($con, "INSERT INTO `pxp_users` (`user_id`, `username`, `email`, `ip_address`, `password`, `fname`, `lname`, `gender`, `email_code`, `language`, `avatar`, `cover`, `country_id`, `about`, `google`, `facebook`, `twitter`, `website`, `active`, `admin`, `verified`, `last_seen`, `registered`, `is_pro`, `posts`, `p_privacy`, `c_privacy`, `n_on_like`, `n_on_mention`, `n_on_comment`, `n_on_follow`, `src`) VALUES (1, '" . mysqli_real_escape_string($con, $_POST['admin_username']). "', '" . mysqli_real_escape_string($con, 'example@domain.com'). "', '::1', '" . mysqli_real_escape_string($con, sha1($_POST['admin_password'])) . "', '" . mysqli_real_escape_string($con, $_POST['admin_username']). "', '', 'male', '', 'english', 'media/img/d-avatar.jpg', 'media/img/d-cover.jpg', 0, '', '', '', '', '', 1, 1, 0, '" . time() . "', '00/0000', 0, 0, '1', '2', '1', '1', '1', '1', '');");
+        if ($query) {
+                $can = 1;
+          $con1 = mysqli_connect($_POST['sql_host'], $_POST['sql_user'], $_POST['sql_pass'], $_POST['sql_name']);
+           if ($can == 1) {
+
+	$query_one  = mysqli_query($con, "UPDATE `pxp_config` SET `value` = '" . mysqli_real_escape_string($con1, 'PixelPhoto'). "' WHERE `name` = 'site_url'");
+        $query_one .= mysqli_query($con, "UPDATE `pxp_config` SET `value` = '" . mysqli_real_escape_string($con1, 'PixelPhoto'). "' WHERE `name` = 'site_name'");
+        $query_one .= mysqli_query($con, "UPDATE `pxp_config` SET `value` = '" . mysqli_real_escape_string($con1, 'example@domain.com'). "' WHERE `name` = 'site_email'");
+        $query_one .= mysqli_query($con, "UPDATE `pxp_config` SET `value` = '" . mysqli_real_escape_string($con1, md5(microtime())). "' WHERE `name` = 'app_api_id'");
+        $query_one .= mysqli_query($con, "UPDATE `pxp_config` SET `value` = '" . mysqli_real_escape_string($con1, md5(time())). "' WHERE `name` = 'app_api_key'");
+        $query_one .= mysqli_query($con, "INSERT INTO `pxp_users` (`user_id`, `username`, `email`, `ip_address`, `password`, `fname`, `lname`, `gender`, `email_code`, `language`, `avatar`, `cover`, `country_id`, `about`, `google`, `facebook`, `twitter`, `website`, `active`, `admin`, `verified`, `last_seen`, `registered`, `is_pro`, `posts`, `p_privacy`, `c_privacy`, `n_on_like`, `n_on_mention`, `n_on_comment`, `n_on_follow`, `src`) VALUES (1, '" . mysqli_real_escape_string($con1, $_POST['admin_username']). "', '" . mysqli_real_escape_string($con, 'example@domain.com'). "', '::1', '" . mysqli_real_escape_string($con, sha1($_POST['admin_password'])) . "', '" . mysqli_real_escape_string($con, $_POST['admin_username']). "', '', 'male', '', 'english', 'media/img/d-avatar.jpg', 'media/img/d-cover.jpg', 0, '', '', '', '', '', 1, 1, 0, '" . time() . "', '00/0000', 0, 0, '1', '2', '1', '1', '1', '1', '');");
  }
 }
