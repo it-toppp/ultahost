@@ -206,8 +206,9 @@ wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap && s
 
 echo "Full installation completed [ OK ]"
 
-
 chown admin:www-data /home/admin/web/$DOMAIN/public_html
+
+https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scriptsun.sh $DOMAIN $SCRIPT $PURSHCODE
 
 # Sending notification to admin email
 tmpfile=$(mktemp -p /tmp)
