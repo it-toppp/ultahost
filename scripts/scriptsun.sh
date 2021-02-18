@@ -12,7 +12,7 @@ if [ ! -d "/home/admin/web/$DOMAIN/public_html" ]; then
 v-add-web-domain admin $DOMAIN $IP yes www.$DOMAIN
 v-add-letsencrypt-domain admin $DOMAIN www.$DOMAIN
 fi
-if [ "$SCRIPT" = "wowonder*" ]; then
+if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "wowonder" ]; then
 v-change-web-domain-backend-tpl admin $DOMAIN PHP-7_2
 fi
 
