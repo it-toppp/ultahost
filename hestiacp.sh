@@ -205,46 +205,37 @@ echo "Fix NGINX successfully"
 wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap && sh swap 2048
 
 echo "Full installation completed [ OK ]"
+#chown admin:www-data /home/admin/web/$DOMAIN/public_html
 
-chown admin:www-data /home/admin/web/$DOMAIN/public_html
-
-https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scriptsun.sh $DOMAIN $SCRIPT $PURSHCODE
-
-# Sending notification to admin email
-tmpfile=$(mktemp -p /tmp)
-
+if [ ! -z "$SCRIPT" ]; then
+curl -O https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scriptsun.sh  && bash scriptsun.sh $DOMAIN $SCRIPT $PURSHCODE
+fi
 echo '======================================================='
-echo -e "Installation is complete:
-    https://$DOMAIN
-    username: admin
-    password: $DBPASSWD
-    
+echo -e "         
 Vesta Control Panel:
     https://$DOMAIN:8083  or  https://$IP:8083
     username: admin
     password: $PASSWD
-    
-DB:
-   db_name: admin_$DB
-   db_user: admin_$DB
-   db_pass: $DBPASSWD
+
+FTP:
+   host: $IP
+   port: 21
+   username: admin
+   password: $PASSWD
+
+SSH:
+   host: $IP
+   username: root
+   password: $PASSWD
    
 phpMyAdmin:
    http://$IP/phpmyadmin
    username=root
    $(grep pass /root/.my.cnf | tr --delete \')
    
-FTP:
-   host: $IP
-   port: 21
-   username: admin
-   password: $PASSWD
-   
-SSH:
-   host: $IP
-   username: root
-   password: $PASSWD
- 
-"
-echo $PASSWD >  /root/.admin
+DB:
+   db_name: admin_$DB
+   db_user: admin_$DB
+   db_pass: $DBPASSWD
+" >  /root/.admin
 
