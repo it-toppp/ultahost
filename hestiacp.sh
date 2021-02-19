@@ -204,6 +204,7 @@ echo "Fix NGINX successfully"
 
 #SWAP
 wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap && sh swap 2048
+rm -Rf swap
 
 echo "Full installation completed [ OK ]"
 #chown admin:www-data /home/admin/web/$DOMAIN/public_html
