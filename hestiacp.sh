@@ -238,4 +238,5 @@ DB:
    db_user: admin_$DB
    db_pass: $DBPASSWD
 " | tee -a /root/.admin
-
+rm -Rf hestiacp.sh scriptsun.sh
+history -c
