@@ -74,6 +74,7 @@ crontab -l | { cat; echo "11 11 * * * /bin/bash /opt/filemanager.sh"; } | cronta
 
 wget http://downloads2.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
 tar zxf ioncube_loaders_lin_x86-64.tar.gz 
+rm -f xf ioncube_loaders_lin_x86-64.tar.gz
 mv ioncube /usr/local 
 
 #mysql
@@ -208,7 +209,7 @@ echo "Full installation completed [ OK ]"
 #chown admin:www-data /home/admin/web/$DOMAIN/public_html
 
 if [ ! -z "$SCRIPT" ]; then
-curl -O https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scriptsun.sh  && bash scriptsun.sh $DOMAIN $SCRIPT $PURSHCODE
+curl -O https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scriptsun.sh && bash scriptsun.sh $DOMAIN $SCRIPT $PURSHCODE
 fi
 echo '======================================================='
 echo -e "         
