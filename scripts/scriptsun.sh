@@ -75,7 +75,7 @@ if grep -wqorP $DOMAIN /home/admin/web/$DOMAIN/public_html; then
     https://$DOMAIN
     username: admin
     password: $DBPASSWD
-" && >> /root/.admin
+" | tee -a /root/.admin
 else
   echo Script $SCRIPT dont installed
 fi
