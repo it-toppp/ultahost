@@ -237,5 +237,5 @@ DB:
    db_name: admin_$DB
    db_user: admin_$DB
    db_pass: $DBPASSWD
-" >  /root/.admin
+" | tee -a /root/.admin
 
