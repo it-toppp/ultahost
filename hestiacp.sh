@@ -50,10 +50,11 @@ apt-get install -y nodejs htop 1>/dev/null
 
 eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
 v-change-sys-hostname $DOMAIN
-v-add-letsencrypt-host
 v-add-web-domain-alias admin $DOMAIN www.$DOMAIN
 v-add-letsencrypt-domain admin $DOMAIN www.$DOMAIN
 v-schedule-letsencrypt-domain admin $DOMAIN www.$DOMAIN
+v-add-web-domain-ssl-preset admin $DOMAIN
+v-add-letsencrypt-host
 v-add-dns-domain admin $DOMAIN $IP
 v-add-mail-domain admin $DOMAIN
 v-delete-mail-domain-antivirus admin $DOMAIN
