@@ -53,6 +53,7 @@ v-change-sys-hostname $DOMAIN
 v-add-web-domain-alias admin $DOMAIN www.$DOMAIN
 v-add-letsencrypt-domain admin $DOMAIN www.$DOMAIN
 v-schedule-letsencrypt-domain admin $DOMAIN www.$DOMAIN
+v-add-web-domain-ssl-force admin $DOMAIN
 v-add-web-domain-ssl-preset admin $DOMAIN
 v-add-letsencrypt-host
 v-add-dns-domain admin $DOMAIN $IP
