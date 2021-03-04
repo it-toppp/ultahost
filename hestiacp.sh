@@ -47,7 +47,9 @@ bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMA
 apt-get install -y ffmpeg 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_14.x | bash -
 apt-get install -y nodejs htop 1>/dev/null
+npm install forever -g
 
+#Preset
 eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
 v-change-sys-hostname $DOMAIN
 v-add-web-domain-alias admin $DOMAIN www.$DOMAIN
