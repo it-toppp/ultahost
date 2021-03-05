@@ -31,9 +31,8 @@ DIG_IP=$(getent ahostsv4 $DOMAIN | sed -n 's/ *STREAM.*//p')
 #Prepare
 hostnamectl set-hostname $DOMAIN
 echo "$IP  $DOMAIN" >> /etc/hosts
-touch /etc/apt/sources.list.d/mariadb.list
-chattr +a /etc/apt/sources.list.d/mariadb.list
-
+#touch /etc/apt/sources.list.d/mariadb.list
+#chattr +a /etc/apt/sources.list.d/mariadb.list
 
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMAIN --email admin@$DOMAIN --password $PASSWD 
@@ -42,11 +41,11 @@ bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMA
 #/usr/local/vesta/bin/v-add-letsencrypt-domain admin $DOMAIN www.$DOMAIN "yes"
 #fi
 
-#DEB (ffmpeg,node)
+#DEB 
 #apt-get update 1>/dev/null
 apt-get install -y ffmpeg 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_14.x | bash -
-apt-get install -y nodejs htop 1>/dev/null
+apt-get install -y nodejs htop redis-server php7.4-redis 1>/dev/null
 npm install forever -g
 
 #Preset
