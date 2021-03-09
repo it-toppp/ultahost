@@ -45,8 +45,9 @@ bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMA
 #apt-get update 1>/dev/null
 apt-get install -y ffmpeg 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_14.x | bash -
-apt-get install -y nodejs htop redis-server php7.4-redis 1>/dev/null
+apt-get install -y nodejs htop redis-server php7.4-redis php7.2-redis 1>/dev/null
 npm install forever -g
+cp /home/admin/.composer/composer /usr/local/bin/composer
 
 #Preset
 eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
