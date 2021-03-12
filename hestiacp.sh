@@ -46,7 +46,7 @@ apt-get update 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_14.x | bash -
 apt-get install -y nodejs htop redis-server php7.4-redis php7.2-redis 1>/dev/null
 npm install forever -g
-apt-get install -y ffmpeg
+apt-get install ffmpeg -y --fix-missing
 cp /home/admin/.composer/composer /usr/local/bin/
 
 #Preset
