@@ -41,5 +41,33 @@ uapi Mysql create_database name=$CPUSER_$DB --user $CPUSER 1>/dev/null
 uapi Mysql create_user name=$CPUSER_$DB password=byrfgcekzwbz --user $CPUSER 1>/dev/null
 uapi Mysql set_privileges_on_database user=$CPUSER_$DB database=$CPUSER_$DB privileges=ALL%20PRIVILEGES --user $CPUSER 1>/dev/null
 
+echo "Full installation completed [ OK ]"
+#chown admin:admin /home/admin/public_html
 
+if [ ! -z "$SCRIPT" ]; then
+curl -O https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scriptsun.sh && bash scriptsun.sh $DOMAIN $SCRIPT $PURSHCODE
+fi
+echo '======================================================='
+echo -e "         
+WHM:
+    https://cp.$DOMAIN:2087
+    username: root
+    password: $PASSWD
 
+Cpanel:
+   https://cp.$DOMAIN:2083
+   username: admin
+   password: $PASSWD
+
+SSH:
+   host: $IP
+   username: root
+   password: $PASSWD
+     
+DB:
+   db_name: $CPUSER_$DB
+   db_user: $CPUSER_$DB
+   db_pass: $DBPASSWD
+" | tee -a /root/.admin
+cd /root && rm -Rf hestiacp.sh scriptsun.sh
+history -c
