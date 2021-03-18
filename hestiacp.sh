@@ -118,7 +118,9 @@ echo "Fix MYSQL successfully"
 #PHP
 grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 100/g'
 
-cat >> /etc/php/7.4/fpm/php.ini << HERE 
+multiphp_v=("7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
+for v in "${multiphp_v[@]}"; do
+cat >>  /etc/php/$v/fpm/php.ini << HERE 
 file_uploads = On
 allow_url_fopen = On
 post_max_size = 5120M
@@ -129,45 +131,16 @@ max_input_vars = 3000
 max_input_time = 6000
 zlib.output_compression = Off
 memory_limit = 1000M
-[Zend Modules]
-zend_extension = /usr/local/ioncube/ioncube_loader_lin_7.4.so
-zend_extension_ts = /usr/local/ioncube/ioncube_loader_lin_7.4_ts.so
 HERE
-systemctl restart php7.4-fpm
 
-cat >> /etc/php/7.3/fpm/php.ini << HERE 
-file_uploads = On
-allow_url_fopen = On
-post_max_size = 5120M
-upload_max_filesize = 5120M
-output_buffering = Off
-max_execution_time = 6000
-max_input_vars = 3000
-max_input_time = 6000
-zlib.output_compression = Off
-memory_limit = 1000M
+cat >>  /etc/php/$v/fpm/conf.d/00-ioncube.ini << HERE 
 [Zend Modules]
-zend_extension = /usr/local/ioncube/ioncube_loader_lin_7.3.so
-zend_extension_ts = /usr/local/ioncube/ioncube_loader_lin_7.3_ts.so
+zend_extension = /usr/local/ioncube/ioncube_loader_lin_$v.so
+zend_extension_ts = /usr/local/ioncube/ioncube_loader_lin_$v_ts.so
 HERE
-systemctl restart php7.3-fpm
 
-cat >>  /etc/php/7.2/fpm/php.ini << HERE 
-file_uploads = On
-allow_url_fopen = On
-post_max_size = 5120M
-upload_max_filesize = 5120M
-output_buffering = Off
-max_execution_time = 6000
-max_input_vars = 3000
-max_input_time = 6000
-zlib.output_compression = Off
-memory_limit = 1000M
-[Zend Modules]
-zend_extension = /usr/local/ioncube/ioncube_loader_lin_7.2.so
-zend_extension_ts = /usr/local/ioncube/ioncube_loader_lin_7.2_ts.so
-HERE
-systemctl restart php7.2-fpm
+systemctl restart php$v-fpm
+done
 echo "Fix PHP successfully"
 
 #Apache
