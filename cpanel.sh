@@ -1,8 +1,9 @@
+#!/bin/bash
+
 DOMAIN=$1
 PASSWD=$2
 SCRIPT=$3
 PURSHCODE=$4
-
 CPUSER=admin
 DBPASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 12)
 DB=$(LC_CTYPE=C tr -dc a-z0-9 < /dev/urandom | head -c 5)
