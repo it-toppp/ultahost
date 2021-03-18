@@ -109,7 +109,7 @@ cat > /etc/mysql/conf.d/z_custom.cnf << HERE
     max_allowed_packet = 1024M
     max_connections = 20000
     max_user_connections = 5000
-    wait_timeout = 10000
+    wait_timeout = 100000
        
 HERE
 systemctl restart  mysql 1>/dev/null
