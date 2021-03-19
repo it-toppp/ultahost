@@ -133,7 +133,13 @@ zlib.output_compression = Off
 memory_limit = 1000M
 HERE
 
-cat >>  /etc/php/$v/fpm/conf.d/00-ioncube.ini << HERE 
+cat > /etc/php/$v/fpm/conf.d/00-ioncube.ini << HERE 
+[Zend Modules]
+zend_extension = /usr/local/ioncube/ioncube_loader_lin_$v.so
+zend_extension_ts = /usr/local/ioncube/ioncube_loader_lin_$v_ts.so
+HERE
+
+cat >  /etc/php/$v/cli/conf.d/00-ioncube.ini << HERE
 [Zend Modules]
 zend_extension = /usr/local/ioncube/ioncube_loader_lin_$v.so
 zend_extension_ts = /usr/local/ioncube/ioncube_loader_lin_$v_ts.so
