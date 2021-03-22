@@ -32,7 +32,7 @@ chmod +x wp-cli.phar
 sudo mv wp-cli.phar /home/$user/wp
 cd /home/$user/web/$domain/public_html
 sudo -H -u$user /home/$user/wp core download
-sudo -H -u$user /home/$user/wp core config --dbname=$DBUSER --dbuser=$DBUSER --dbpass=$DBPASSWD
+sudo -H -u$user /home/$user/wp core config --dbname=$user_$DB --dbuser=$user_$DB --dbpass=$DBPASSWD
 sudo -H -u$user /home/$user/wp core install --url="$DOMAIN" --title="$DOMAIN" --admin_user="$admin" --admin_password="$password" --admin_email="$email" --path=$WORKINGDIR
 #FIX za https://github.com/wp-cli/wp-cli/issues/2632
 mysql -uadmin_$DB -p$DBPASSWD -e "USE admin_$DB; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'siteurl'; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'home';"
@@ -41,6 +41,9 @@ rm -rf /home/$user/wp
 }
 
 function scriptsun() {
+wget http://ss.ultahost.com/$SCRIPT.zip
+unzip -qo $SCRIPT.zip
+chmod 777 ffmpeg/ffmpeg upload cache ffmpeg/ffmpeg sys/ffmpeg/ffmpeg ./assets/import/ffmpeg/ffmpeg  &> /dev/null
 curl -L --fail --silent --show-error --post301 --insecur \
      --data-urlencode "purshase_code=$PURSHCODE" \
      --data-urlencode "sql_host=localhost" \
@@ -57,16 +60,10 @@ curl -L --fail --silent --show-error --post301 --insecur \
 http://$DOMAIN/install/?page=installation | grep -o -e "Failed to connect to MySQL" -e "successfully installed" -e "Wrong purchase code" -e "This code is already used on another domain"  
 }
 
-# if [ "$SCRIPT" = "wowonder" ] || [ "$SCRIPT" = "wo" ]; then
-wget http://ss.ultahost.com/$SCRIPT.zip
-unzip -qo $SCRIPT.zip
-chmod 777 ffmpeg/ffmpeg upload cache ffmpeg/ffmpeg sys/ffmpeg/ffmpeg ./assets/import/ffmpeg/ffmpeg  &> /dev/null
-chown -R admin:admin ./
-
- if [ "$SCRIPT" = "pixelphoto" ]; then
+if [ "$SCRIPT" = "pixelphoto" ]; then
   mv ./install/index.php ./install.php_old
   wget https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/pixelphoto/installer.php -O ./install/index.php
- fi
+fi
 
 #wowonder,playtube,deepsound
 if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "playtube" ] || [ "$SCRIPT" = "deepsound" ]; then
