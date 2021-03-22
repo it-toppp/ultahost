@@ -30,12 +30,12 @@ rm -rf /home/$user/wp
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 sudo mv wp-cli.phar /home/$user/wp
-cd /home/$user/web/$domain/public_html
+cd /home/$user/web/$DOMAIN/public_html
 sudo -H -u$user /home/$user/wp core download
 sudo -H -u$user /home/$user/wp core config --dbname=$user_$DB --dbuser=$user_$DB --dbpass=$DBPASSWD
-sudo -H -u$user /home/$user/wp core install --url="$DOMAIN" --title="$DOMAIN" --admin_user="$admin" --admin_password="$password" --admin_email="$email" --path=$WORKINGDIR
+sudo -H -u$user /home/$user/wp core install --url="$DOMAIN" --title="$DOMAIN" --admin_user="admin" --admin_password="$password" --admin_email="$email" --path=$WORKINGDIR
 #FIX za https://github.com/wp-cli/wp-cli/issues/2632
-mysql -uadmin_$DB -p$DBPASSWD -e "USE admin_$DB; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'siteurl'; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'home';"
+mysql -u$admin_$DB -p$DBPASSWD -e "USE admin_$DB; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'siteurl'; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'home';"
 chown -R $user:$user $WORKINGDIR
 rm -rf /home/$user/wp
 }
