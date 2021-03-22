@@ -8,19 +8,22 @@ WORKINGDIR="/home/$user/web/$DOMAIN/public_html"
 DBPASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 12)
 DB=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 5)
 IP=$(wget -O - -q ifconfig.me)
+email=admin@$DOMAIN
 
 echo "$IP  $DOMAIN" >> /etc/hosts
 v-add-database admin $DB $DB $DBPASSWD
 cd $WORKINGDIR
 rm -fr $WORKINGDIR/{*,.*} &> /dev/null
 
-if [ ! -d "/home/admin/web/$DOMAIN/public_html" ]; then
+if [ ! -d "/home/$user/web/$DOMAIN/public_html" ]; then
 v-add-web-domain admin $DOMAIN $IP yes www.$DOMAIN
 v-add-letsencrypt-domain admin $DOMAIN www.$DOMAIN
 fi
-if [ ! -f "/home/$user/conf/web/ssl.$DOMAIN.pem" ]; then
+
+if [ ! -f "/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.pem" ]; then
     v-add-letsencrypt-domain "$user" "$DOMAIN" "www.$DOMAIN"
 fi
+
 if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "wowonder" ]; then
 v-change-web-domain-backend-tpl admin $DOMAIN PHP-7_2
 fi
@@ -31,11 +34,11 @@ curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.pha
 chmod +x wp-cli.phar
 sudo mv wp-cli.phar /home/$user/wp
 cd /home/$user/web/$DOMAIN/public_html
-/home/$user/wp core download
-/home/$user/wp core config --dbname=$user_$DB --dbuser=$user_$DB --dbpass=$DBPASSWD
-/home/$user/wp core install --url="$DOMAIN" --title="$DOMAIN" --admin_user="$admin" --admin_password="$DBPASSWD" --admin_email="$email" --path=$WORKINGDIR
+/home/$user/wp core download --allow-root
+/home/$user/wp core config --dbname=admin_$DB --dbuser=admin_$DB --dbpass=$DBPASSWD --allow-root
+/home/$user/wp core install --url="$DOMAIN" --title="$DOMAIN" --admin_user="$admin" --admin_password="$DBPASSWD" --admin_email="$email" --path=$WORKINGDIR --allow-root
 #FIX za https://github.com/wp-cli/wp-cli/issues/2632
-mysql -u$admin_$DB -p$DBPASSWD -e "USE $admin_$DB; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'siteurl'; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'home';"
+mysql -uadmin_$DB -p$DBPASSWD admin_$DB -e "update wp_options set option_value = 'https://$DOMAIN' where option_name = 'siteurl'; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'home';"
 chown -R $user:$user $WORKINGDIR
 rm -rf /home/$user/wp
 }
@@ -57,17 +60,18 @@ curl -L --fail --silent --show-error --post301 --insecur \
      --data-urlencode "admin_username=admin" \
      --data-urlencode "admin_password=$DBPASSWD" \
      --data-urlencode "install=install" \
-http://$DOMAIN/install/?page=installation | grep -o -e "Failed to connect to MySQL" -e "successfully installed" -e "Wrong purchase code" -e "This code is already used on another domain"  
+http://$DOMAIN/install/?page=installation | grep -o -e "Failed to connect to MySQL" -e "successfully installed" -e "Wrong purchase code" -e "This code is already used on another domain"
 }
 
 if [ "$SCRIPT" = "pixelphoto" ]; then
+scriptsun
   mv ./install/index.php ./install.php_old
   wget https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/pixelphoto/installer.php -O ./install/index.php
 fi
 
 #wowonder,playtube,deepsound
-if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "playtube" ] || [ "$SCRIPT" = "deepsound" ]; then
-     scriptsun
+if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "wowonder" ] || [ "$SCRIPT" = "playtube" ] || [ "$SCRIPT" = "deepsound" ]; then
+scriptsun
      mysql admin_$DB -e "UPDATE config SET value = 'on' WHERE  name = 'ffmpeg_system';" &> /dev/null
      mysql admin_$DB -e "UPDATE config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
 fi
