@@ -48,11 +48,11 @@ cat >> .htaccess <<EOF
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteBase ${URL_PATH}
+RewriteBase /
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . ${URL_PATH}index.php [L]
+RewriteRule . /index.php [L]
 </IfModule>
 EOF
 
