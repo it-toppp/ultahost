@@ -7,7 +7,7 @@ WORKINGDIR="/home/$user/web/$DOMAIN/public_html"
 #PASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9_\!\@\#\%\^\&\(\)-+= < /dev/urandom | head -c 12)
 DBPASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 12)
 DB=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 5)
-DBNAME=$user_$DB
+DBNAME=$user"_"$DB
 DBUSER=$DBNAME
 IP=$(wget -O - -q ifconfig.me)
 email=admin@$DOMAIN
