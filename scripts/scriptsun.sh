@@ -41,6 +41,19 @@ cd /home/$user/web/$DOMAIN/public_html
 mysql -uadmin_$DB -p$DBPASSWD admin_$DB -e "update wp_options set option_value = 'https://$DOMAIN' where option_name = 'siteurl'; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'home';"
 chown -R $user:$user $WORKINGDIR
 rm -rf /home/$user/wp
+
+cat >> .htaccess <<EOF
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase ${URL_PATH}
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . ${URL_PATH}index.php [L]
+</IfModule>
+EOF
+
 }
 
 function scriptsun() {
