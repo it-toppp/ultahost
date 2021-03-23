@@ -63,10 +63,13 @@ curl -L --fail --silent --show-error --post301 --insecur \
 http://$DOMAIN/install/?page=installation | grep -o -e "Failed to connect to MySQL" -e "successfully installed" -e "Wrong purchase code" -e "This code is already used on another domain"
 }
 
+#pixelphoto
 if [ "$SCRIPT" = "pixelphoto" ]; then
 scriptsun
-  mv ./install/index.php ./install.php_old
+  rm -f ./install/index.php
   wget https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/pixelphoto/installer.php -O ./install/index.php
+  mysql admin_$DB -e "UPDATE pxp_config SET value = 'on' WHERE  name = 'ffmpeg_sys';" &> /dev/null
+  mysql admin_$DB -e "UPDATE pxp_config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
 fi
 
 #wowonder,playtube,deepsound
@@ -75,22 +78,19 @@ scriptsun
      mysql admin_$DB -e "UPDATE config SET value = 'on' WHERE  name = 'ffmpeg_system';" &> /dev/null
      mysql admin_$DB -e "UPDATE config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
 fi
-#pixelphoto
-if [ "$SCRIPT" = "pixelphoto" ]; then
-     scriptsun
-     mysql admin_$DB -e "UPDATE pxp_config SET value = 'on' WHERE  name = 'ffmpeg_sys';" &> /dev/null
-     mysql admin_$DB -e "UPDATE pxp_config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
-fi
+
 #quickdate
 if [ "$SCRIPT" = "quickdate" ]; then
      scriptsun
      mysql admin_$DB -e "UPDATE options SET option_value = '1' WHERE  option_name = 'ffmpeg_sys';" &> /dev/null
      mysql admin_$DB -e "UPDATE options SET option_value = '/usr/bin/ffmpeg' WHERE option_name = 'ffmpeg_binary';" &> /dev/null
 fi
+
 # wordpress
 if [ "$SCRIPT" = "wordpress" ]; then
    wordpress
 fi
+
 chown -R $user:$user $WORKINGDIR
 cat > htaccess_tmp << HERE
 # Redirects http to https protocol
