@@ -14,8 +14,6 @@ email=admin@$DOMAIN
 
 echo "$IP  $DOMAIN" >> /etc/hosts
 v-add-database admin $DB $DB $DBPASSWD
-cd $WORKINGDIR
-rm -fr $WORKINGDIR/{*,.*} &> /dev/null
 
 if [ ! -d "/home/$user/web/$DOMAIN/public_html" ]; then
 v-add-web-domain admin $DOMAIN $IP yes www.$DOMAIN
@@ -29,6 +27,9 @@ fi
 if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "wowonder" ]; then
 v-change-web-domain-backend-tpl admin $DOMAIN PHP-7_2
 fi
+
+cd $WORKINGDIR
+rm -fr $WORKINGDIR/{*,.*} &> /dev/null
 
 function wordpress() {
 rm -rf /home/$user/wp
