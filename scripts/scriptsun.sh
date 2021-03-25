@@ -82,9 +82,10 @@ http://$DOMAIN/install/?page=installation | grep -o -e "Failed to connect to MyS
 
 #pixelphoto
 if [ "$SCRIPT" = "pixelphoto" ]; then
-scriptsun
   rm -f ./install/index.php
   wget https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/pixelphoto/installer.php -O ./install/index.php
+  chown -R $user:$user $WORKINGDIR
+  scriptsun
   mysql $DBNAME -e "UPDATE pxp_config SET value = 'on' WHERE  name = 'ffmpeg_sys';" &> /dev/null
   mysql $DBNAME -e "UPDATE pxp_config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
 fi
