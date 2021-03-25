@@ -83,8 +83,7 @@ if [ "$SCRIPT" = "pixelphoto" ]; then
   wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip
   rm -f ./install/index.php
   wget https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/pixelphoto/installer.php -O ./install/index.php
-  #chown -R $user:$user $WORKINGDIR
-  scriptsun
+    scriptsun
   mysql $DBNAME -e "UPDATE pxp_config SET value = 'on' WHERE  name = 'ffmpeg_sys';" &> /dev/null
   mysql $DBNAME -e "UPDATE pxp_config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
 fi
