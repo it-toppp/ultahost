@@ -60,8 +60,6 @@ EOF
 }
 
 function scriptsun() {
-wget http://ss.ultahost.com/$SCRIPT.zip
-unzip -qo $SCRIPT.zip
 chown -R admin:admin ./
 chmod 777 ffmpeg/ffmpeg upload cache ffmpeg/ffmpeg sys/ffmpeg/ffmpeg ./assets/import/ffmpeg/ffmpeg  &> /dev/null
 curl -L --fail --silent --show-error --post301 --insecur \
@@ -82,16 +80,18 @@ http://$DOMAIN/install/?page=installation | grep -o -e "Failed to connect to MyS
 
 #pixelphoto
 if [ "$SCRIPT" = "pixelphoto" ]; then
+  wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip
   rm -f ./install/index.php
   wget https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/pixelphoto/installer.php -O ./install/index.php
-  chown -R $user:$user $WORKINGDIR
+  #chown -R $user:$user $WORKINGDIR
   scriptsun
   mysql $DBNAME -e "UPDATE pxp_config SET value = 'on' WHERE  name = 'ffmpeg_sys';" &> /dev/null
   mysql $DBNAME -e "UPDATE pxp_config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
 fi
 
-#wowonder,playtube,deepsound
-if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "wowonder" ] || [ "$SCRIPT" = "playtube" ] || [ "$SCRIPT" = "deepsound" ]; then
+#wowonder,playtube,deepsound,flame
+if [ "$SCRIPT" = "wowonder" ] || [ "$SCRIPT" = "playtube" ] || [ "$SCRIPT" = "deepsound" ]|| [ "$SCRIPT" = "flame" ]; then
+    wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip
     scriptsun
     mysql $DBNAME -e "UPDATE config SET value = 'on' WHERE  name = 'ffmpeg_system';" &> /dev/null
     mysql $DBNAME -e "UPDATE config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
@@ -99,6 +99,7 @@ fi
 
 #quickdate
 if [ "$SCRIPT" = "quickdate" ]; then
+     wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip
      scriptsun
      mysql $DBNAME -e "UPDATE options SET option_value = '1' WHERE  option_name = 'ffmpeg_sys';" &> /dev/null
      mysql $DBNAME -e "UPDATE options SET option_value = '/usr/bin/ffmpeg' WHERE option_name = 'ffmpeg_binary';" &> /dev/null
