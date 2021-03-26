@@ -58,7 +58,7 @@ v-add-web-domain-alias admin $DOMAIN www.$DOMAIN
 v-add-letsencrypt-domain admin $DOMAIN www.$DOMAIN
 v-schedule-letsencrypt-domain admin $DOMAIN www.$DOMAIN
 v-add-web-domain-ssl-force admin $DOMAIN
-v-add-web-domain-ssl-preset admin $DOMAIN
+#v-add-web-domain-ssl-preset admin $DOMAIN
 v-add-letsencrypt-host
 v-add-dns-domain admin $DOMAIN $IP
 v-add-mail-domain admin $DOMAIN
@@ -66,7 +66,6 @@ v-delete-mail-domain-antivirus admin $DOMAIN
 v-delete-mail-domain-dkim admin $DOMAIN
 v-add-mail-account admin $DOMAIN admin $PASSWD
 v-add-mail-account admin $DOMAIN info $PASSWD
-v-add-mail-domain-ssl admin $DOMAIN
 v-add-database admin $DB $DB $DBPASSWD
 v-add-firewall-rule ACCEPT 0.0.0.0/0 3000,449
 sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/packages/default.pkg
