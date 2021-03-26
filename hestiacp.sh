@@ -31,8 +31,8 @@ DIG_IP=$(getent ahostsv4 $DOMAIN | sed -n 's/ *STREAM.*//p')
 #Prepare
 hostnamectl set-hostname $DOMAIN
 echo "$IP  $DOMAIN" >> /etc/hosts
-#touch /etc/apt/sources.list.d/mariadb.list
-#chattr +a /etc/apt/sources.list.d/mariadb.list
+touch /etc/apt/sources.list.d/mariadb.list
+chattr +a /etc/apt/sources.list.d/mariadb.list
 
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMAIN --email admin@$DOMAIN --password $PASSWD 
