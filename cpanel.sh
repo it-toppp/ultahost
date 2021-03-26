@@ -11,7 +11,7 @@ DB=$(LC_CTYPE=C tr -dc a-z0-9 < /dev/urandom | head -c 5)
 IP=$(wget -O - -q ifconfig.me)
 DIG_IP=$(getent ahostsv4 $DOMAIN | sed -n 's/ *STREAM.*//p')
 
-hostnamectl set-hostname $DOMAIN
+hostnamectl set-hostname cp.$DOMAIN
 echo "$IP  $DOMAIN" >> /etc/hosts
 cd /home && curl -o latest -L https://securedownloads.cpanel.net/latest && sh latest
 
