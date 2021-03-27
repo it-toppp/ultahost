@@ -16,12 +16,13 @@ echo "$IP  $DOMAIN" >> /etc/hosts
 v-add-database admin $DB $DB $DBPASSWD
 
 if [ ! -d "/home/$user/web/$DOMAIN/public_html" ]; then
-v-add-web-domain admin $DOMAIN $IP yes www.$DOMAIN
-v-add-letsencrypt-domain admin $DOMAIN www.$DOMAIN
+v-add-web-domain $user $DOMAIN $IP yes www.$DOMAIN
+v-add-letsencrypt-domain $user $DOMAIN www.$DOMAIN
 fi
 
 if [ ! -f "/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.pem" ]; then
-    v-add-letsencrypt-domain "$user" "$DOMAIN" "www.$DOMAIN"
+    v-add-letsencrypt-domain $user "$DOMAIN" "www.$DOMAIN"
+    v-schedule-letsencrypt-domain $user $DOMAIN www.$DOMAIN
 fi
 
 if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "wowonder" ]; then
