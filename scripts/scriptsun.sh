@@ -91,7 +91,7 @@ fi
 
 #wowonder,playtube,deepsound,flame
 if [ "$SCRIPT" = "wowonder" ] || [ "$SCRIPT" = "playtube" ] || [ "$SCRIPT" = "deepsound" ]|| [ "$SCRIPT" = "flame" ]; then
-    wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip
+    wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip "Script/*" && mv Script\/{*,.*} ./ &> /dev/null
     scriptsun
     mysql $DBNAME -e "UPDATE config SET value = 'on' WHERE  name = 'ffmpeg_system';" &> /dev/null
     mysql $DBNAME -e "UPDATE config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
