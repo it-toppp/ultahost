@@ -19,6 +19,7 @@ fi
 #conf
 sed -i.bak -e "s/\$root\_path = \$\_SERVER\['DOCUMENT_ROOT'\];/\$root_path = \'\/home\/admin\/web\';/g" config.php
 sed -i 's|max_upload_size_bytes = 2048|max_upload_size_bytes = 10000000000|' config.php
+sed -i 's|timeout: 120000,|timeout: 12000001,|' tinyfilemanager.php
 sed -i 's|"show_hidden":false|"show_hidden":true|' tinyfilemanager.php
 sed -i "s|.*navbar-brand.*|        <a class="navbar-brand" href=\"/\"> Exit </a>|" tinyfilemanager.php
 sed -i 's|use_auth = true|use_auth = false|' config.php
