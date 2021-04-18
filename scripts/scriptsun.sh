@@ -40,7 +40,7 @@ sudo mv wp-cli.phar /home/$user/wp
 cd /home/$user/web/$DOMAIN/public_html
 /home/$user/wp core download --allow-root
 /home/$user/wp core config --dbname=$DBNAME --dbuser=$DBUSER --dbpass=$DBPASSWD --allow-root
-/home/$user/wp core install --url="$DOMAIN" --title="$DOMAIN" --admin_user="$admin" --admin_password="$DBPASSWD" --admin_email="$email" --path=$WORKINGDIR --allow-root
+/home/$user/wp core install --url="$DOMAIN" --title="$DOMAIN" --admin_user=admin --admin_password="$DBPASSWD" --admin_email="$email" --path=$WORKINGDIR --allow-root
 #FIX za https://github.com/wp-cli/wp-cli/issues/2632
 mysql -u$DBUSER -p$DBPASSWD $DBNAME -e "update wp_options set option_value = 'https://$DOMAIN' where option_name = 'siteurl'; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'home';"
 chown -R $user:$user $WORKINGDIR
