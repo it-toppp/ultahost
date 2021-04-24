@@ -8,7 +8,7 @@ wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/tinyfi
 chmod 666 tinyfilemanager.php
 fi
 if [ ! -f config.php ]; then
-wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/config.php
+wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/config-sample.php -O config.php
 chmod 644 config.php
 fi
 if [ ! -f translation.json ]; then
