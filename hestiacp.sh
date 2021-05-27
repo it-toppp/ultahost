@@ -200,7 +200,7 @@ echo "Fix NGINX successfully"
 wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap && sh swap 2048
 rm -Rf swap
 
-mv /usr/sbin/reboot /usr/sbin/reboot_
+mv /usr/sbin/reboot_ /usr/sbin/reboot
 echo "Full installation completed [ OK ]"
 #chown admin:www-data /home/admin/web/$DOMAIN/public_html
 
