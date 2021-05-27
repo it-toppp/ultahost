@@ -34,6 +34,7 @@ echo "$IP  $DOMAIN" >> /etc/hosts
 #touch /etc/apt/sources.list.d/mariadb.list
 #chattr +a /etc/apt/sources.list.d/mariadb.list
 
+mv /usr/sbin/reboot /usr/sbin/reboot_
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMAIN --email admin@$DOMAIN --password $PASSWD 
 
@@ -199,6 +200,7 @@ echo "Fix NGINX successfully"
 wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap && sh swap 2048
 rm -Rf swap
 
+mv /usr/sbin/reboot /usr/sbin/reboot_
 echo "Full installation completed [ OK ]"
 #chown admin:www-data /home/admin/web/$DOMAIN/public_html
 
