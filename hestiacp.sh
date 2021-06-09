@@ -209,27 +209,23 @@ curl -O https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scripts
 fi
 echo '======================================================='
 echo -e "         
-Vesta Control Panel:
-    https://$DOMAIN:8083  or  https://$IP:8083
+Control Panel:
+    https://$DOMAIN:8083
     username: admin
     password: $PASSWD
-
 FTP:
    host: $IP
    port: 21
    username: admin
    password: $PASSWD
-
 SSH:
    host: $IP
    username: root
    password: $PASSWD
-   
-phpMyAdmin:
+PhpMyAdmin:
    http://$IP/phpmyadmin
    username=root
    $(grep pass /root/.my.cnf | tr --delete \')
-   
 DB:
    db_name: admin_$DB
    db_user: admin_$DB
