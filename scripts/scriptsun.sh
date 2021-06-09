@@ -13,7 +13,7 @@ IP=$(wget -O - -q ifconfig.me)
 email=admin@$DOMAIN
 
 echo "$IP  $DOMAIN" >> /etc/hosts
-v-add-database admin $DB $DB $DBPASSWD
+v-add-database $user $DB $DB $DBPASSWD
 
 if [ ! -d "/home/$user/web/$DOMAIN/public_html" ]; then
 v-add-web-domain $user $DOMAIN $IP yes www.$DOMAIN
@@ -26,7 +26,7 @@ if [ ! -f "/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.pem" ]; then
 fi
 
 if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "wowonder" ]; then
-v-change-web-domain-backend-tpl admin $DOMAIN PHP-8_0
+v-change-web-domain-backend-tpl $user $DOMAIN PHP-8_0
 fi
 
 cd $WORKINGDIR
@@ -61,7 +61,7 @@ EOF
 }
 
 function scriptsun() {
-chown -R admin:admin ./
+chown -R $user:$user ./
 chmod 777 ffmpeg/ffmpeg upload cache ffmpeg/ffmpeg sys/ffmpeg/ffmpeg ./assets/import/ffmpeg/ffmpeg  &> /dev/null
 curl -L --fail --silent --show-error --post301 --insecur \
      --data-urlencode "purshase_code=$PURSHCODE" \
@@ -121,7 +121,7 @@ RewriteRule ^(.*)$ https://%1/\$1 [R=301,L]
 HERE
 sed -i -e '/RewriteEngine/r htaccess_tmp' .htaccess
 
-if grep -wqorP $DBNAME /home/admin/web/$DOMAIN/public_html; then
+if grep -wqorP $DBNAME /home/$user/web/$DOMAIN/public_html; then
     rm -r ./install  __MACOSX $SCRIPT.zip  &> /dev/null
 
     echo -e "Installation $SCRIPT is successfully:
