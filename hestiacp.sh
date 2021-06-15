@@ -48,7 +48,7 @@ curl -sL https://deb.nodesource.com/setup_14.x | bash -
 apt-get install -y nodejs htop redis-server php7.4-redis php7.2-redis 1>/dev/null
 npm install forever -g
 npm install forever-service -g
-npm install pm -g
+npm install pm2 -g
 apt-get install ffmpeg -y --fix-missing 1>/dev/null
 apt-get update 1>/dev/null
 apt-get install ffmpeg -y 1>/dev/null
@@ -213,19 +213,23 @@ Control Panel:
     https://$DOMAIN:8083
     username: admin
     password: $PASSWD
+    
 FTP:
    host: $IP
    port: 21
    username: admin
    password: $PASSWD
+   
 SSH:
    host: $IP
    username: root
    password: $PASSWD
+   
 PhpMyAdmin:
    http://$IP/phpmyadmin
    username=root
    $(grep pass /root/.my.cnf | tr --delete \')
+   
 DB:
    db_name: admin_$DB
    db_user: admin_$DB
