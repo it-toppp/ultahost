@@ -89,7 +89,16 @@ if [ "$SCRIPT" = "pixelphoto" ]; then
   mysql $DBNAME -e "UPDATE pxp_config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
 fi
 
-#wowonder,playtube,deepsound,flame
+
+#wowonder
+if [ "$SCRIPT" = "wowonder" ] ; then
+    wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip "Script/*" && mv Script\/{*,.*} ./ &> /dev/null
+    scriptsun
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = 'on' WHERE  name = 'ffmpeg_system';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
+fi
+
+#playtube,deepsound,flame
 if [ "$SCRIPT" = "wowonder" ] || [ "$SCRIPT" = "playtube" ] || [ "$SCRIPT" = "deepsound" ]|| [ "$SCRIPT" = "flame" ]; then
     wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip "Script/*" && mv Script\/{*,.*} ./ &> /dev/null
     scriptsun
