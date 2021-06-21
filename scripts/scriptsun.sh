@@ -84,7 +84,7 @@ if [ "$SCRIPT" = "pixelphoto" ]; then
   wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip
   rm -f ./install/index.php
   wget https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/pixelphoto/installer.php -O ./install/index.php
-    scriptsun
+  scriptsun
   mysql $DBNAME -e "UPDATE pxp_config SET value = 'on' WHERE  name = 'ffmpeg_sys';" &> /dev/null
   mysql $DBNAME -e "UPDATE pxp_config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
 fi
@@ -96,14 +96,27 @@ if [ "$SCRIPT" = "wowonder" ] ; then
     scriptsun
     mysql $DBNAME -e "UPDATE Wo_Config SET value = 'on' WHERE  name = 'ffmpeg_system';" &> /dev/null
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = '2053' WHERE  name = 'nodejs_ssl_port';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = '1' WHERE  name = 'node_socket_flow';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = '1' WHERE  name = 'nodejs_ssl';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = '1' WHERE  name = 'nodejs_live_notification';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = '/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.key' WHERE  name = 'nodejs_key_path';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = '/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.crt' WHERE  name = 'nodejs_cert_path';" &> /dev/null
+    v-add-firewall-rule ACCEPT 0.0.0.0/0 2053
+    cd /home/$user/web/$DOMAIN/public_html/nodejs
+    npm install
+    pm2 delete wowonder &> /dev/null
+    pm2 start main.js --name "wowonder"
+    pm2 startup
+    pm2 save    
 fi
 
 #playtube,deepsound,flame
-if [ "$SCRIPT" = "wowonder" ] || [ "$SCRIPT" = "playtube" ] || [ "$SCRIPT" = "deepsound" ]|| [ "$SCRIPT" = "flame" ]; then
+if [ "$SCRIPT" = "playtube" ] || [ "$SCRIPT" = "deepsound" ]|| [ "$SCRIPT" = "flame" ]; then
     wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip "Script/*" && mv Script\/{*,.*} ./ &> /dev/null
     scriptsun
     mysql $DBNAME -e "UPDATE config SET value = 'on' WHERE  name = 'ffmpeg_system';" &> /dev/null
-    mysql $DBNAME -e "UPDATE config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
+    mysql $DBNAME -e "UPDATE config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null  
 fi
 
 #quickdate
