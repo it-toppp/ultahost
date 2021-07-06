@@ -77,9 +77,12 @@ v-delete-mail-domain-dkim admin $DOMAIN
 v-add-mail-account admin $DOMAIN admin $PASSWD
 v-add-mail-account admin $DOMAIN info $PASSWD
 v-add-database admin $DB $DB $DBPASSWD
-v-add-firewall-rule ACCEPT 0.0.0.0/0 3000,449
+v-add-firewall-rule ACCEPT 0.0.0.0/0 449
 sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/packages/default.pkg
 sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/users/admin/user.conf
+sed -i "s/WEB_TEMPLATE='default'/WEB_TEMPLATE='default'\\nBACKEND_TEMPLATE='new_PHP-7_4'/g" /usr/local/hestia/data/packages/default.pkg
+cp /usr/local/hestia/data/packages/default.pkg /usr/local/hestia/data/packages/new.pkg
+v-change-user-package admin new FORCE
 
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/feature/v-restore-user-cpanel/bin/v-restore-user-cpanel -O /usr/local/hestia/bin/v-restore-user-cpanel
 chmod +x /usr/local/hestia/bin/v-restore-user-cpanel
