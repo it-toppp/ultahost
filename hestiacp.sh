@@ -34,6 +34,13 @@ echo "$IP  $DOMAIN" >> /etc/hosts
 #touch /etc/apt/sources.list.d/mariadb.list
 #chattr +a /etc/apt/sources.list.d/mariadb.list
 
+cat > /etc/apt/sources.list << HERE 
+deb http://deb.debian.org/debian/ buster main
+deb-src http://deb.debian.org/debian/ buster main
+deb http://security.debian.org/debian-security buster/updates main
+deb-src http://security.debian.org/debian-security buster/updates main
+HERE
+
 mv /usr/sbin/reboot /usr/sbin/reboot_
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMAIN --email admin@$DOMAIN --password $PASSWD 
@@ -93,10 +100,6 @@ rm -f xf ioncube_loaders_lin_x86-64.tar.gz
 mv ioncube /usr/local 
 
 #mysql
-#sed -i 's|max_connections=200|max_connections=2000|' /etc/mysql/my.cnf
-#sed -i 's|max_user_connections=50|max_user_connections=500|' /etc/mysql/my.cnf
-#sed -i 's|wait_timeout=10|wait_timeout=10000|' /etc/mysql/my.cnf
-#sed -i 's|#innodb_use_native_aio = 0|sql_mode=NO_ENGINE_SUBSTITUTION|' /etc/mysql/my.cnf
 cat > /etc/mysql/conf.d/z_custom.cnf << HERE 
 [mysqld]
     query_cache_size = 0
@@ -107,10 +110,8 @@ cat > /etc/mysql/conf.d/z_custom.cnf << HERE
     table_definition_cache = 1000
     thread_cache_size = 500
     tmp_table_size = 256M
-    
     innodb_buffer_pool_size = 1G
     sql_mode = NO_ENGINE_SUBSTITUTION
-    
     max_heap_table_size  = 256M
     max_allowed_packet = 1024M
     max_connections = 20000
@@ -121,8 +122,14 @@ HERE
 systemctl restart  mysql 1>/dev/null
 echo "Fix MYSQL successfully"
 
+#Backup_time
+hou=$(shuf -i 0-23 -n 1)
+replace "MIN='10' HOUR='05' DAY='*'" "MIN='15' HOUR='$hou' DAY='*/2'" -- /usr/local/hestia/data/users/admin/cron.conf
+
 #PHP
-grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 100/g'
+grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 1000/g'
+cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_4.tpl /usr/local/hestia/data/templates/web/php-fpm/new_PHP-7_4.tpl
+cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_0.tpl /usr/local/hestia/data/templates/web/php-fpm/new_PHP-8_0.tpl
 
 multiphp_v=("7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 for v in "${multiphp_v[@]}"; do
