@@ -34,12 +34,13 @@ echo "$IP  $DOMAIN" >> /etc/hosts
 #touch /etc/apt/sources.list.d/mariadb.list
 #chattr +a /etc/apt/sources.list.d/mariadb.list
 
-cat > /etc/apt/sources.list << HERE 
-deb http://deb.debian.org/debian/ buster main
-deb-src http://deb.debian.org/debian/ buster main
-deb http://security.debian.org/debian-security buster/updates main
-deb-src http://security.debian.org/debian-security buster/updates main
-HERE
+#if [[ -e /etc/debian_version ]]; then
+#cat > /etc/apt/sources.list << HERE 
+#deb http://deb.debian.org/debian/ buster main
+#deb-src http://deb.debian.org/debian/ buster main
+#deb http://security.debian.org/debian-security buster/updates main
+#deb-src http://security.debian.org/debian-security buster/updates main
+#HERE
 
 mv /usr/sbin/reboot /usr/sbin/reboot_
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
