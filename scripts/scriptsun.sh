@@ -26,7 +26,7 @@ if [ ! -f "/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.pem" ]; then
 fi
 
 if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "wowonder" ]; then
-v-change-web-domain-backend-tpl $user $DOMAIN PHP-8_0
+v-change-web-domain-backend-tpl $user $DOMAIN new_PHP-8_0
 fi
 
 cd $WORKINGDIR
@@ -89,14 +89,13 @@ if [ "$SCRIPT" = "pixelphoto" ]; then
   mysql $DBNAME -e "UPDATE pxp_config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
 fi
 
-
 #wowonder
 if [ "$SCRIPT" = "wowonder" ] ; then
     wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip "Script/*" && mv Script\/{*,.*} ./ &> /dev/null
     scriptsun
     mysql $DBNAME -e "UPDATE Wo_Config SET value = 'on' WHERE  name = 'ffmpeg_system';" &> /dev/null
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
-    mysql $DBNAME -e "UPDATE Wo_Config SET value = '2053' WHERE  name = 'nodejs_ssl_port';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = '449' WHERE  name = 'nodejs_ssl_port';" &> /dev/null
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '1' WHERE  name = 'node_socket_flow';" &> /dev/null
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '1' WHERE  name = 'nodejs_ssl';" &> /dev/null
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '1' WHERE  name = 'nodejs_live_notification';" &> /dev/null
@@ -142,6 +141,7 @@ RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
 RewriteRule ^(.*)$ https://%1/\$1 [R=301,L]
 HERE
 sed -i -e '/RewriteEngine/r htaccess_tmp' .htaccess
+rm -f htaccess_tmp
 
 if grep -wqorP $DBNAME /home/$user/web/$DOMAIN/public_html; then
     rm -r ./install  __MACOSX $SCRIPT.zip  &> /dev/null
