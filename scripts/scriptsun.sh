@@ -25,9 +25,9 @@ if [ ! -f "/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.pem" ]; then
     v-schedule-letsencrypt-domain $user $DOMAIN www.$DOMAIN
 fi
 
-if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "wowonder" ]; then
+#if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "wowonder" ]; then
 v-change-web-domain-backend-tpl $user $DOMAIN new_PHP-8_0
-fi
+#fi
 
 cd $WORKINGDIR
 rm -fr $WORKINGDIR/{*,.*} &> /dev/null
