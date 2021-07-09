@@ -65,6 +65,13 @@ cp /home/admin/.composer/composer /usr/local/bin/
 
 #Preset
 eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
+grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 1000/g'
+cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_4.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_4.tpl
+cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_0.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_0.tpl
+sed -i "s/WEB_TEMPLATE='default'/WEB_TEMPLATE='default'\\nBACKEND_TEMPLATE='new-PHP-7_4'/g" /usr/local/hestia/data/packages/default.pkg
+cp /usr/local/hestia/data/packages/default.pkg /usr/local/hestia/data/packages/new.pkg
+v-change-user-package admin new FORCE
+v-rebuild-user admin
 v-change-sys-hostname $DOMAIN
 v-add-web-domain-alias admin $DOMAIN www.$DOMAIN
 v-add-letsencrypt-domain admin $DOMAIN www.$DOMAIN
@@ -74,23 +81,20 @@ v-add-web-domain-ssl-force admin $DOMAIN
 v-add-letsencrypt-host
 v-add-dns-domain admin $DOMAIN $IP
 v-add-mail-domain admin $DOMAIN
-v-delete-mail-domain-antivirus admin $DOMAIN
+#v-delete-mail-domain-antivirus admin $DOMAIN
 v-delete-mail-domain-dkim admin $DOMAIN
 v-add-mail-account admin $DOMAIN admin $PASSWD
 v-add-mail-account admin $DOMAIN info $PASSWD
 v-add-database admin $DB $DB $DBPASSWD
 v-add-firewall-rule ACCEPT 0.0.0.0/0 449
-sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/packages/default.pkg
-sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/users/admin/user.conf
-sed -i "s/WEB_TEMPLATE='default'/WEB_TEMPLATE='default'\\nBACKEND_TEMPLATE='new_PHP-7_4'/g" /usr/local/hestia/data/packages/default.pkg
-cp /usr/local/hestia/data/packages/default.pkg /usr/local/hestia/data/packages/new.pkg
-v-change-user-package admin new FORCE
+v-change-web-domain-backend-tpl $user $DOMAIN new-PHP-7_4
 
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/feature/v-restore-user-cpanel/bin/v-restore-user-cpanel -O /usr/local/hestia/bin/v-restore-user-cpanel
 chmod +x /usr/local/hestia/bin/v-restore-user-cpanel
 wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/proxy3000.stpl -O /usr/local/hestia/data/templates/web/nginx/proxy3000.stpl
 wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/proxy3000.tpl -O /usr/local/hestia/data/templates/web/nginx/proxy3000.tpl
 chmod 755 /usr/local/hestia/data/templates/web/nginx/proxy3000.tpl /usr/local/hestia/data/templates/web/nginx/proxy3000.stpl
+
 
 #FIX FM
 grep -rl "directoryPerm = 0744" /usr/local/hestia/web/fm/vendor/league/flysystem-sftp | xargs perl -p -i -e 's/directoryPerm = 0744/directoryPerm = 0755/g'
@@ -127,15 +131,13 @@ HERE
 systemctl restart  mysql 1>/dev/null
 echo "Fix MYSQL successfully"
 
-#Backup_time
+#Backup
 hou=$(shuf -i 0-23 -n 1)
 replace "MIN='10' HOUR='05' DAY='*'" "MIN='15' HOUR='$hou' DAY='*/2'" -- /usr/local/hestia/data/users/admin/cron.conf
+sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/packages/default.pkg
+sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/users/admin/user.conf
 
 #PHP
-grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 1000/g'
-cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_4.tpl /usr/local/hestia/data/templates/web/php-fpm/new_PHP-7_4.tpl
-cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_0.tpl /usr/local/hestia/data/templates/web/php-fpm/new_PHP-8_0.tpl
-
 multiphp_v=("7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 for v in "${multiphp_v[@]}"; do
 cat >>  /etc/php/$v/fpm/php.ini << HERE 
@@ -219,7 +221,7 @@ echo "Full installation completed [ OK ]"
 if [ ! -z "$SCRIPT" ]; then
 curl -O https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scriptsun.sh && bash scriptsun.sh $DOMAIN $SCRIPT $PURSHCODE
 fi
-echo '======================================================='
+echo '======================================='
 echo -e "         
 Control Panel:
     https://$DOMAIN:8083
