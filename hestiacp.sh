@@ -1,6 +1,6 @@
 #!/bin/bash
 apt-get update &>/dev/null
-#apt install curl &>/dev/null
+HOSTNAME_DEF=$(hostname)
 
 # UFW_disable
 tmpfile=$(mktemp -p /tmp)
@@ -22,7 +22,7 @@ PURSHCODE=$4
 
 #if [ -z "$1" ]
 #PASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9_\!\@\#\%\^\&\(\)-+= < /dev/urandom | head -c 12)
-DBPASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 12)
+DBPASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
 DB=$(LC_CTYPE=C tr -dc a-z0-9 < /dev/urandom | head -c 5)
 #DB=$(echo $DOMAIN | tr -dc "a-z" | cut -c 1-5)
 IP=$(wget -O - -q ifconfig.me)
@@ -54,7 +54,7 @@ bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMA
 #DEB 
 apt-get update 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_14.x | bash -
-apt-get install -y nodejs htop redis-server php7.4-redis php7.2-redis 1>/dev/null
+apt-get install -y nodejs htop redis-server php7.4-redis php8.0-redis 1>/dev/null
 npm install forever -g
 npm install forever-service -g
 npm install pm2 -g
@@ -78,7 +78,6 @@ v-add-letsencrypt-domain admin $DOMAIN www.$DOMAIN
 v-schedule-letsencrypt-domain admin $DOMAIN www.$DOMAIN
 v-add-web-domain-ssl-force admin $DOMAIN
 #v-add-web-domain-ssl-preset admin $DOMAIN
-v-add-letsencrypt-host
 v-add-dns-domain admin $DOMAIN $IP
 v-add-mail-domain admin $DOMAIN
 #v-delete-mail-domain-antivirus admin $DOMAIN
@@ -88,6 +87,7 @@ v-add-mail-account admin $DOMAIN info $PASSWD
 v-add-database admin $DB $DB $DBPASSWD
 v-add-firewall-rule ACCEPT 0.0.0.0/0 449
 v-change-web-domain-backend-tpl $user $DOMAIN new-PHP-7_4
+v-add-letsencrypt-host
 
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/feature/v-restore-user-cpanel/bin/v-restore-user-cpanel -O /usr/local/hestia/bin/v-restore-user-cpanel
 chmod +x /usr/local/hestia/bin/v-restore-user-cpanel
