@@ -26,7 +26,7 @@ if [ ! -f "/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.pem" ]; then
 fi
 
 #if [ "$SCRIPT" = "wowonder-null" ] || [ "$SCRIPT" = "wowonder" ]; then
-v-change-web-domain-backend-tpl $user $DOMAIN new_PHP-8_0
+v-change-web-domain-backend-tpl $user $DOMAIN new-PHP-8_0
 #fi
 
 cd $WORKINGDIR
