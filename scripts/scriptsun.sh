@@ -131,6 +131,8 @@ if [ "$SCRIPT" = "wordpress" ]; then
    wordpress
 fi
 
+#htaccess
+cd $WORKINGDIR
 chown -R $user:$user $WORKINGDIR
 cat > htaccess_tmp << HERE
 # Redirects http to https protocol
