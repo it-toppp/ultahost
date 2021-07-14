@@ -25,10 +25,12 @@ if [ ! -f "/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.pem" ]; then
     v-schedule-letsencrypt-domain $user $DOMAIN www.$DOMAIN
 fi
 
+if [ ! -f "/usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_0.tpl" ]; then
 grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 1000/g'
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_4.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_4.tpl
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_0.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_0.tpl
 v-change-web-domain-backend-tpl $user $DOMAIN new-PHP-8_0
+fi
 
 cd $WORKINGDIR
 rm -fr $WORKINGDIR/{*,.*} &> /dev/null
@@ -58,7 +60,6 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.php [L]
 </IfModule>
 EOF
-
 }
 
 function scriptsun() {
