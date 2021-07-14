@@ -61,11 +61,6 @@ deb-src http://security.debian.org/debian-security buster/updates main
 HERE
 fi
 
-
-if [[ -e /etc/debian_version ]]; then
-
-fi
-
 mv /usr/sbin/reboot /usr/sbin/reboot_
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMAIN --email admin@$DOMAIN --password $PASSWD 
