@@ -126,6 +126,7 @@ if [ "$SCRIPT" = "quickdate" ]; then
      scriptsun
      mysql $DBNAME -e "UPDATE options SET option_value = '1' WHERE  option_name = 'ffmpeg_sys';" &> /dev/null
      mysql $DBNAME -e "UPDATE options SET option_value = '/usr/bin/ffmpeg' WHERE option_name = 'ffmpeg_binary';" &> /dev/null
+     v-change-web-domain-backend-tpl $user $DOMAIN new-PHP-7_4
 fi
 
 # wordpress
