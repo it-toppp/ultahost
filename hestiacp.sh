@@ -34,13 +34,36 @@ echo "$IP  $DOMAIN" >> /etc/hosts
 #touch /etc/apt/sources.list.d/mariadb.list
 #chattr +a /etc/apt/sources.list.d/mariadb.list
 
-if [[ -e /etc/debian_version ]]; then
+if grep -qs "ubuntu" /etc/os-release; then
+	os="ubuntu"
+	os_version=$(grep 'VERSION_ID' /etc/os-release | cut -d '"' -f 2 | tr -d '.')
+	group_name="nogroup"
+elif [[ -e /etc/debian_version ]]; then
+	os="debian"
+	os_version=$(grep -oE '[0-9]+' /etc/debian_version | head -1)
+	group_name="nogroup"
+fi
+
+if [[ "$os" == "ubuntu" && "$os_version" -lt 1804 ]]; then
+	echo "Ubuntu 18.04 "
+fi
+
+if [[ "$os" == "ubuntu" && "$os_version" -lt 2004 ]]; then
+	echo "Ubuntu 20.04 "
+fi
+
+if [[ "$os" == "debian" && "$os_version" -lt 10 ]]; then
 cat > /etc/apt/sources.list << HERE 
 deb http://deb.debian.org/debian/ buster main
 deb-src http://deb.debian.org/debian/ buster main
 deb http://security.debian.org/debian-security buster/updates main
 deb-src http://security.debian.org/debian-security buster/updates main
 HERE
+fi
+
+
+if [[ -e /etc/debian_version ]]; then
+
 fi
 
 mv /usr/sbin/reboot /usr/sbin/reboot_
