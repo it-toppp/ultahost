@@ -52,7 +52,7 @@ if [[ "$os" == "ubuntu" && "$os_version" -lt 2004 ]]; then
 	echo "Ubuntu 20.04 "
 fi
 
-if [[ "$os" == "debian" && "$os_version" -lt 10 ]]; then
+if [[ "$os" == "debian" && "$os_version" == "10" ]]; then
 cat > /etc/apt/sources.list << HERE 
 deb http://deb.debian.org/debian/ buster main
 deb-src http://deb.debian.org/debian/ buster main
