@@ -106,8 +106,8 @@ if [ "$SCRIPT" = "wowonder" ] ; then
     v-add-firewall-rule ACCEPT 0.0.0.0/0 449
     cd /home/$user/web/$DOMAIN/public_html/nodejs
     npm install
-    pm2 delete wowonder &> /dev/null
-    pm2 start main.js --name "wowonder"
+    pm2 delete "wowonder_$DOMAIN" &> /dev/null
+    pm2 start main.js --name "wowonder_$DOMAIN"
     pm2 startup
     pm2 save    
 fi
