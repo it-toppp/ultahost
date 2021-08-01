@@ -13,20 +13,49 @@ DIG_IP=$(getent ahostsv4 $DOMAIN | sed -n 's/ *STREAM.*//p')
 
 hostnamectl set-hostname cp.$DOMAIN
 echo "$IP  $DOMAIN" >> /etc/hosts
+yum -y remove NetworkManager
 cd /home && curl -o latest -L https://securedownloads.cpanel.net/latest && sh latest
+if /usr/local/cpanel/cpkeyclt  | grep -o -e "Update Failed" ; then
+      echo 'Fail'
+      exit
+fi
 
-bash /scripts/install_lets_encrypt_autossl_provider
 wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap && sh swap 2048
 yum localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm -y
-yum install mc htop ffmpeg ffmpeg-devel ea-php74-php-zip ea-php73-php-zip -y
+yum install mc htop ffmpeg ffmpeg-devel ea-php80-php-zip ea-php74-php-zip ea-php73-php-zip -y
 echo 'sql_mode=NO_ENGINE_SUBSTITUTION' >> /etc/my.cnf && systemctl restart mysqld
-curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
+curl -sL https://rpm.nodesource.com/setup_14.x | sudo -E bash -
 yum -y install nodejs
 npm insrall forever -g
 
-#/usr/local/cpanel/bin/set_hostname
+/scripts/install_lets_encrypt_autossl_provider
+/usr/local/cpanel/scripts/setupftpserver --force pure-ftpd
 
+#mysql
 whmapi1 start_background_mysql_upgrade version=10.3
+
+mkdir /var/cpanel/ApachePHPFPM
+touch /var/cpanel/ApachePHPFPM/system_pool_defaults.yaml
+
+#php_fpm
+cat > /var/cpanel/ApachePHPFPM/system_pool_defaults.yaml << HERE
+php_admin_value_disable_functions : passthru,system
+pm.max_children : 100
+HERE
+/scripts/php_fpm_config --rebuild
+/scripts/restartsrv_apache_php_fpm
+
+
+#php_ini
+whmapi1 php_ini_set_directives directive-1=memory_limit:1024M version=ea-php80
+whmapi1 php_ini_set_directives directive-1=max_execution_time:6000 version=ea-php80
+whmapi1 php_ini_set_directives directive-1=max_input_time:6000 version=ea-php80
+whmapi1 php_ini_set_directives directive-1=post_max_size:5120M version=ea-php80
+whmapi1 php_ini_set_directives directive-1=upload_max_filesize:5120M version=ea-php80
+whmapi1 php_ini_set_directives directive-1=allow_url_fopen:On version=ea-php80
+whmapi1 php_ini_set_directives directive-1=zlib.output_compression:Off version=ea-php80
+whmapi1 php_ini_set_directives directive-1=memory_limit:1128M version=ea-php80
+
 whmapi1 php_ini_set_directives directive-1=memory_limit:1024M version=ea-php74
 whmapi1 php_ini_set_directives directive-1=max_execution_time:6000 version=ea-php74
 whmapi1 php_ini_set_directives directive-1=max_input_time:6000 version=ea-php74
@@ -57,6 +86,12 @@ echo "Full installation completed [ OK ]"
 if [ ! -z "$SCRIPT" ]; then
 curl -O https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scriptsun.sh && bash scriptsun.sh $DOMAIN $SCRIPT $PURSHCODE
 fi
+
+whmapi1 --output=jsonpretty \
+  php_set_vhost_versions \
+  version='ea-php80' \
+  vhost='otherchars.rm3.tld'
+
 echo '======================================================='
 echo -e "         
 WHM:
