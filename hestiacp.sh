@@ -215,6 +215,7 @@ ThreadsPerChild 25
 ServerLimit       2000
 MaxRequestWorkers 2000
 MaxConnectionsPerChild 0
+MaxClients          5000
 </IfModule>
 HERE
 systemctl restart apache2  1>/dev/null
