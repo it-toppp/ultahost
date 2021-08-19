@@ -151,7 +151,8 @@ rm -f htaccess_tmp
 if grep -wqorP $DBNAME /home/$user/web/$DOMAIN/public_html; then
     rm -r ./install  __MACOSX $SCRIPT.zip  &> /dev/null
 
-    echo -e "Installation $SCRIPT is successfully:
+    echo -e "Your $SCRIPT Installation order is successfully done:
+    Here is your website admin login info:
     https://$DOMAIN
     username: admin
     password: $DBPASSWD
