@@ -242,7 +242,8 @@ if [ ! -z "$SCRIPT" ]; then
 curl -O https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scriptsun.sh && bash scriptsun.sh $DOMAIN $SCRIPT $PURSHCODE
 fi
 echo '======================================='
-echo -e "         
+echo -e "  
+Here is your Control Panel login info:
 Control Panel:
     https://$DOMAIN:8083
     username: admin
