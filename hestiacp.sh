@@ -244,6 +244,7 @@ fi
 echo '======================================='
 echo -e "  
 Here is your Control Panel login info:
+
 Control Panel:
     https://$DOMAIN:8083
     username: admin
