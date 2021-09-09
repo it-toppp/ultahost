@@ -105,11 +105,11 @@ if [ "$SCRIPT" = "wowonder" ] ; then
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.crt' WHERE  name = 'nodejs_cert_path';" &> /dev/null
     v-add-firewall-rule ACCEPT 0.0.0.0/0 449
     cd /home/$user/web/$DOMAIN/public_html/nodejs
-    npm install
+    npm install &> /dev/null
     pm2 delete "wowonder_$DOMAIN" &> /dev/null
     pm2 start main.js --name "wowonder_$DOMAIN"
-    pm2 startup
-    pm2 save    
+    pm2 startup &> /dev/null
+    pm2 save  &> /dev/null
 fi
 
 #playtube,deepsound,flame
