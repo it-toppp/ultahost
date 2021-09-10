@@ -5,7 +5,7 @@ HOSTNAME_DEF=$(hostname)
 # UFW_disable
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
-for pkg in exim4 postfix ufw; do
+for pkg in postfix ufw; do
     if [ ! -z "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg* $conflicts"
         apt-get -qq purge $conflicts -y
