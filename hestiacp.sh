@@ -152,7 +152,8 @@ echo "Fix MYSQL successfully"
 
 #Backup
 hou=$(shuf -i 0-23 -n 1)
-replace "MIN='10' HOUR='05' DAY='*'" "MIN='15' HOUR='$hou' DAY='*/3'" -- /usr/local/hestia/data/users/admin/cron.conf
+#replace "MIN='10' HOUR='05' DAY='*'" "MIN='15' HOUR='$hou' DAY='*/3'" -- /usr/local/hestia/data/users/admin/cron.conf
+v-change-cron-job admin 7 45 $hou '*/3' '*' '*' 'sudo /usr/local/hestia/bin/v-backup-users'
 sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/packages/default.pkg
 sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/users/admin/user.conf
 
