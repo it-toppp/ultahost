@@ -73,9 +73,9 @@ bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMA
 apt-get update 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_14.x | bash -
 apt-get install -y nodejs htop redis-server php7.4-redis php8.0-redis 1>/dev/null
-npm install forever -g
-npm install forever-service -g
-npm install pm2 -g
+npm install forever -g 1>/dev/null
+npm install forever-service -g 1>/dev/null
+npm install pm2 -g 1>/dev/null
 apt-get install ffmpeg -y --fix-missing 1>/dev/null
 apt-get update 1>/dev/null
 apt-get install ffmpeg -y 1>/dev/null
@@ -152,13 +152,14 @@ echo "Fix MYSQL successfully"
 
 #Backup
 hou=$(shuf -i 0-23 -n 1)
-#replace "MIN='10' HOUR='05' DAY='*'" "MIN='15' HOUR='$hou' DAY='*/3'" -- /usr/local/hestia/data/users/admin/cron.conf
+min=$(shuf -i 0-55 -n 1)
+#replace "MIN='10' HOUR='05' DAY='*'" "MIN='$min' HOUR='$hou' DAY='*/3'" -- /usr/local/hestia/data/users/admin/cron.conf
 v-change-cron-job admin 7 45 $hou '*/3' '*' '*' 'sudo /usr/local/hestia/bin/v-backup-users'
 sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/packages/default.pkg
 sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/users/admin/user.conf
 
 #PHP
-multiphp_v=("7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 for v in "${multiphp_v[@]}"; do
 cat >>  /etc/php/$v/fpm/php.ini << HERE 
 file_uploads = On
@@ -176,13 +177,11 @@ HERE
 cat > /etc/php/$v/fpm/conf.d/00-ioncube.ini << HERE 
 [Zend Modules]
 zend_extension = /usr/local/ioncube/ioncube_loader_lin_$v.so
-zend_extension_ts = /usr/local/ioncube/ioncube_loader_lin_$v_ts.so
 HERE
 
 cat >  /etc/php/$v/cli/conf.d/00-ioncube.ini << HERE
 [Zend Modules]
 zend_extension = /usr/local/ioncube/ioncube_loader_lin_$v.so
-zend_extension_ts = /usr/local/ioncube/ioncube_loader_lin_$v_ts.so
 HERE
 
 systemctl restart php$v-fpm
@@ -222,9 +221,9 @@ HERE
 systemctl restart apache2  1>/dev/null
 
 #nginx
-sed -i 's|client_max_body_size            256m|client_max_body_size  5120m|' /etc/nginx/nginx.conf
+sed -i 's|client_max_body_size            256m|client_max_body_size  10240m|' /etc/nginx/nginx.conf
 sed -i 's|worker_connections  1024;|worker_connections  4096;|' /etc/nginx/nginx.conf
-sed -i 's|send_timeout                    60;|send_timeout  3000;|' /etc/nginx/nginx.conf
+sed -i 's|send_timeout                    60;|send_timeout  9000;|' /etc/nginx/nginx.conf
 sed -i 's|proxy_connect_timeout           30|proxy_connect_timeout   9000|' /etc/nginx/nginx.conf
 sed -i 's|proxy_send_timeout              180|proxy_send_timeout  9000|' /etc/nginx/nginx.conf
 sed -i 's|proxy_read_timeout              300|proxy_read_timeout  9000|' /etc/nginx/nginx.conf
@@ -232,7 +231,7 @@ systemctl restart nginx 1>/dev/null
 echo "Fix NGINX successfully"
 
 #SWAP
-wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap && sh swap 2048
+wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap && sh swap 2048 1>/dev/null
 rm -Rf swap
 
 mv /usr/sbin/reboot_ /usr/sbin/reboot
@@ -250,23 +249,23 @@ Control Panel:
     https://$DOMAIN:8083
     username: admin
     password: $PASSWD
-    
-FTP:
+ 
+ FTP:
    host: $IP
    port: 21
    username: admin
    password: $PASSWD
-   
+
 SSH:
    host: $IP
    username: root
    password: $PASSWD
-   
+
 PhpMyAdmin:
    http://$IP/phpmyadmin
    username=root
    $(grep pass /root/.my.cnf | tr --delete \')
-   
+
 DB:
    db_name: admin_$DB
    db_user: admin_$DB
