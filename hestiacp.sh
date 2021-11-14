@@ -72,9 +72,8 @@ bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMA
 #DEB 
 apt-get update 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_14.x | bash -
-apt-get install -y nodejs htop redis-server php7.4-redis php8.0-redis 1>/dev/null
+apt-get install -y nodejs htop redis-server php7.4-redis php8.0-redis php7.4-sqlite3 php8.0-sqlite3 php7.4-bcmath php8.0-bcmath 1>/dev/null
 npm install forever -g 1>/dev/null
-npm install forever-service -g 1>/dev/null
 npm install pm2 -g 1>/dev/null
 apt-get install ffmpeg -y --fix-missing 1>/dev/null
 apt-get update 1>/dev/null
