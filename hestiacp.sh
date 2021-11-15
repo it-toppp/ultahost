@@ -72,7 +72,7 @@ bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMA
 #DEB 
 apt-get update 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_14.x | bash -
-apt-get install -y nodejs htop redis-server php7.4-redis php8.0-redis php7.4-sqlite3 php8.0-sqlite3 php7.4-bcmath php8.0-bcmath 1>/dev/null
+apt-get install -y nodejs htop redis-server php7.4-redis php8.0-redis php7.4-sqlite3 php8.0-sqlite3 php7.4-bcmath php8.0-bcmath php7.4-gmp php8.0-gmp 1>/dev/null
 npm install forever -g 1>/dev/null
 npm install pm2 -g 1>/dev/null
 apt-get install ffmpeg -y --fix-missing 1>/dev/null
@@ -112,7 +112,6 @@ chmod +x /usr/local/hestia/bin/v-restore-user-cpanel
 wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/proxy3000.stpl -O /usr/local/hestia/data/templates/web/nginx/proxy3000.stpl
 wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/proxy3000.tpl -O /usr/local/hestia/data/templates/web/nginx/proxy3000.tpl
 chmod 755 /usr/local/hestia/data/templates/web/nginx/proxy3000.tpl /usr/local/hestia/data/templates/web/nginx/proxy3000.stpl
-
 
 #FIX FM
 grep -rl "directoryPerm = 0744" /usr/local/hestia/web/fm/vendor/league/flysystem-sftp | xargs perl -p -i -e 's/directoryPerm = 0744/directoryPerm = 0755/g'
@@ -248,7 +247,7 @@ Control Panel:
     https://$DOMAIN:8083
     username: admin
     password: $PASSWD
- 
+
  FTP:
    host: $IP
    port: 21
