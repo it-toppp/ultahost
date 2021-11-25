@@ -162,6 +162,7 @@ for v in "${multiphp_v[@]}"; do
 cat >>  /etc/php/$v/fpm/php.ini << HERE 
 file_uploads = On
 allow_url_fopen = On
+allow_url_include = On
 post_max_size = 5120M
 upload_max_filesize = 5120M
 output_buffering = Off
