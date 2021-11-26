@@ -261,7 +261,7 @@ SSH:
    password: $PASSWD
 
 PhpMyAdmin:
-   http://$IP/phpmyadmin
+   https://$DOMAIN/phpmyadmin
    username=root
    $(grep pass /root/.my.cnf | tr --delete \')
 
