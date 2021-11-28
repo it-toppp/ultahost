@@ -71,7 +71,7 @@ bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMA
 
 #DEB 
 apt-get update 1>/dev/null
-curl -sL https://deb.nodesource.com/setup_14.x | bash -
+curl -sL https://deb.nodesource.com/setup_16.x | bash -
 apt-get install -y nodejs htop redis-server php7.4-redis php8.0-redis php7.4-sqlite3 php8.0-sqlite3 php7.4-bcmath php8.0-bcmath php7.4-gmp php8.0-gmp 1>/dev/null
 npm install forever -g 1>/dev/null
 npm install pm2 -g 1>/dev/null
@@ -104,7 +104,7 @@ v-add-mail-account admin $DOMAIN admin $PASSWD
 v-add-mail-account admin $DOMAIN info $PASSWD
 v-add-database admin $DB $DB $DBPASSWD
 v-add-firewall-rule ACCEPT 0.0.0.0/0 449
-v-change-web-domain-backend-tpl $user $DOMAIN new-PHP-7_4
+v-change-web-domain-backend-tpl admin $DOMAIN new-PHP-7_4
 v-add-letsencrypt-host
 
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/feature/v-restore-user-cpanel/bin/v-restore-user-cpanel -O /usr/local/hestia/bin/v-restore-user-cpanel
@@ -157,22 +157,26 @@ sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/packages/default.pkg
 sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/users/admin/user.conf
 
 #PHP
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 for v in "${multiphp_v[@]}"; do
 cat >>  /etc/php/$v/fpm/php.ini << HERE 
 file_uploads = On
 allow_url_fopen = On
 allow_url_include = On
-post_max_size = 5120M
-upload_max_filesize = 5120M
+post_max_size = 10240M
+upload_max_filesize = 10240M
 output_buffering = Off
 max_execution_time = 6000
-max_input_vars = 3000
+max_input_vars = 9000
 max_input_time = 6000
 zlib.output_compression = Off
-memory_limit = 1000M
+memory_limit = 600M
 HERE
+systemctl restart php$v-fpm
+done
 
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
+for v in "${multiphp_v[@]}"; do
 cat > /etc/php/$v/fpm/conf.d/00-ioncube.ini << HERE 
 [Zend Modules]
 zend_extension = /usr/local/ioncube/ioncube_loader_lin_$v.so
