@@ -194,7 +194,7 @@ done
 echo "Fix PHP successfully"
 
 #Apache
-a2enmod headers
+a2enmod headers 
 cat > /etc/apache2/mods-enabled/fcgid.conf << HERE 
 <IfModule mod_fcgid.c>
   FcgidConnectTimeout 20
@@ -236,8 +236,9 @@ systemctl restart nginx 1>/dev/null
 echo "Fix NGINX successfully"
 
 #SWAP
-wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap && sh swap 2048 1>/dev/null
-rm -Rf swap
+wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap  1>/dev/null
+sh swap 2048 1>/dev/null
+rm -Rf swap  1>/dev/null
 
 mv /usr/sbin/reboot_ /usr/sbin/reboot
 echo "Full installation completed [ OK ]"
