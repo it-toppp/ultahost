@@ -89,6 +89,13 @@ cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_0.tpl /usr/local/hestia/da
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_1.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_1.tpl
 #sed -i "s/WEB_TEMPLATE='default'/WEB_TEMPLATE='default'\\nBACKEND_TEMPLATE='new-PHP-7_4'/g" /usr/local/hestia/data/packages/default.pkg
 replace "BACKEND_TEMPLATE='default'" "BACKEND_TEMPLATE='new-PHP-7_4'" -- /usr/local/hestia/data/packages/default.pkg
+#Backup
+hou=$(shuf -i 0-23 -n 1)
+min=$(shuf -i 0-55 -n 1)
+#replace "MIN='10' HOUR='05' DAY='*'" "MIN='$min' HOUR='$hou' DAY='*/3'" -- /usr/local/hestia/data/users/admin/cron.conf
+v-change-cron-job admin 7 45 $hou '*/3' '*' '*' 'sudo /usr/local/hestia/bin/v-backup-users'
+sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/packages/default.pkg
+sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/users/admin/user.conf
 cp /usr/local/hestia/data/packages/default.pkg /usr/local/hestia/data/packages/new.pkg
 v-change-user-package admin new FORCE
 v-rebuild-user admin
@@ -149,14 +156,6 @@ cat > /etc/mysql/conf.d/z_custom.cnf << HERE
 HERE
 systemctl restart  mysql 1>/dev/null
 echo "Fix MYSQL successfully"
-
-#Backup
-hou=$(shuf -i 0-23 -n 1)
-min=$(shuf -i 0-55 -n 1)
-#replace "MIN='10' HOUR='05' DAY='*'" "MIN='$min' HOUR='$hou' DAY='*/3'" -- /usr/local/hestia/data/users/admin/cron.conf
-v-change-cron-job admin 7 45 $hou '*/3' '*' '*' 'sudo /usr/local/hestia/bin/v-backup-users'
-sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/packages/default.pkg
-sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/users/admin/user.conf
 
 #PHP
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
