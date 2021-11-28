@@ -83,8 +83,10 @@ cp /home/admin/.composer/composer /usr/local/bin/
 #Preset
 eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
 grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 1000/g'
+cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_2.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_2.tpl
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_4.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_4.tpl
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_0.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_0.tpl
+cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_1.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_1.tpl
 #sed -i "s/WEB_TEMPLATE='default'/WEB_TEMPLATE='default'\\nBACKEND_TEMPLATE='new-PHP-7_4'/g" /usr/local/hestia/data/packages/default.pkg
 replace "BACKEND_TEMPLATE='default'" "BACKEND_TEMPLATE='new-PHP-7_4'" -- /usr/local/hestia/data/packages/default.pkg
 cp /usr/local/hestia/data/packages/default.pkg /usr/local/hestia/data/packages/new.pkg
