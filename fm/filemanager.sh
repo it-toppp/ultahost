@@ -6,6 +6,8 @@ replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_
 replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_db.html
 replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_mail.html
 replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_mail.html
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_dns.html
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_dns.html
 
 cd /usr/local/hestia/web/fm
 rm index.php 
