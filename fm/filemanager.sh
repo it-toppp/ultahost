@@ -1,4 +1,12 @@
 #!/bin/bash
+#fix_templates
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_web.html
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_web.html
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_db.html
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_db.html
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_mail.html
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_mail.html
+
 cd /usr/local/hestia/web/fm
 rm index.php 
 #tinyfilemanager.php config.php
@@ -26,14 +34,14 @@ sed -i 's|use_auth = true|use_auth = false|' config.php
 #sed -i "s|theme = 'light'|theme = \'dark\'|" config.php
 
 #nginx
-sed -i 's|client_max_body_size            256m|client_max_body_size  5120m|' /usr/local/hestia/nginx/conf/nginx.conf
+sed -i 's|client_max_body_size            256m|client_max_body_size  10240m|' /usr/local/hestia/nginx/conf/nginx.conf
 sed -i 's|proxy_send_timeout              180|proxy_send_timeout  1200|' /usr/local/hestia/nginx/conf/nginx.conf
 sed -i 's|proxy_read_timeout              300|proxy_read_timeout  1200|' /usr/local/hestia/nginx/conf/nginx.conf
 
 #php
 grep -rl  "_time] = 300" /usr/local/hestia/php/etc/ | xargs perl -p -i -e 's/_time] = 300/_time] = 1200/g'
-sed -i 's|\[post_max_size\] = 256M|\[post_max_size\] = 5120M|' /usr/local/hestia/php/etc/php-fpm.conf
-sed -i 's|\[upload_max_filesize\] = 256M|\[upload_max_filesize\] = 5120M|' /usr/local/hestia/php/etc/php-fpm.conf
+sed -i 's|\[post_max_size\] = 256M|\[post_max_size\] = 10240M|' /usr/local/hestia/php/etc/php-fpm.conf
+sed -i 's|\[upload_max_filesize\] = 256M|\[upload_max_filesize\] = 10240M|' /usr/local/hestia/php/etc/php-fpm.conf
 systemctl restart hestia
 
 #chown root:admin config.php tinyfilemanager.php
