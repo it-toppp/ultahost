@@ -35,12 +35,12 @@ if [ "$grepc" -eq 0 ]; then
 fi
 
 wget -nv -O /usr/local/hestia/data/templates/web/nginx/anti-ddos_1.tpl https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/anti-ddos_1.tpl
-wget -nv -O /usr/local/vesta/data/templates/web/nginx/anti-ddos_1.stpl https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/anti-ddos_1.stpl
+wget -nv -O /usr/local/hestia/data/templates/web/nginx/anti-ddos_1.stpl https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/anti-ddos_1.stpl
 
 wget -nv -O /usr/local/hestia/data/templates/web/nginx/anti-ddos_3.tpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2.tpl
 wget -nv -O /usr/local/hestia/data/templates/web/nginx/anti-ddos_3.stpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2.stpl
 
 wget -nv -O /usr/local/hestia/data/templates/web/nginx/anti-ddos_2.tpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2-speed-2.tpl
-wget -nv -O /usr/local/vesta/data/templates/web/nginx/anti-ddos_2.stpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2-speed-2.stpl
+wget -nv -O /usr/local/hestia/data/templates/web/nginx/anti-ddos_2.stpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2-speed-2.stpl
 
 service nginx restart
