@@ -34,16 +34,13 @@ if [ "$grepc" -eq 0 ]; then
     echo "=== Added rate_limit for 2 req/sec to nginx.conf"
 fi
 
-wget -nv -O /usr/local/hestia/data/templates/web/nginx/hosting-firewall.tpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall.tpl
-wget -nv -O /usr/local/vesta/data/templates/web/nginx/hosting-firewall.stpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall.stpl
+wget -nv -O /usr/local/hestia/data/templates/web/nginx/anti-ddos_1.tpl https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/anti-ddos_1.tpl
+wget -nv -O /usr/local/vesta/data/templates/web/nginx/anti-ddos_1.stpl https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/anti-ddos_1.stpl
 
-wget -nv -O /usr/local/hestia/data/templates/web/nginx/hosting-firewall-burst-2.tpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2.tpl
-wget -nv -O /usr/local/hestia/data/templates/web/nginx/hosting-firewall-burst-2.stpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2.stpl
+wget -nv -O /usr/local/hestia/data/templates/web/nginx/anti-ddos_3.tpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2.tpl
+wget -nv -O /usr/local/hestia/data/templates/web/nginx/anti-ddos_3.stpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2.stpl
 
-wget -nv -O /usr/local/hestia/data/templates/web/nginx/hosting-firewall-burst-2-speed-2.tpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2-speed-2.tpl
-wget -nv -O /usr/local/vesta/data/templates/web/nginx/hosting-firewall-burst-2-speed-2.stpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2-speed-2.stpl
-
-wget -nv -O /usr/local/hestia/data/templates/web/nginx/hosting-firewall-burst-2-speed-2-conn-4.tpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2-speed-2-conn-4.tpl
-wget -nv -O /usr/local/hestia/data/templates/web/nginx/hosting-firewall-burst-2-speed-2-conn-4.stpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2-speed-2-conn-4.stpl
+wget -nv -O /usr/local/hestia/data/templates/web/nginx/anti-ddos_2.tpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2-speed-2.tpl
+wget -nv -O /usr/local/vesta/data/templates/web/nginx/anti-ddos_2.stpl http://c.myvestacp.com/tools/rate-limit-tpl/hosting-firewall-burst-2-speed-2.stpl
 
 service nginx restart
