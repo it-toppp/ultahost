@@ -3,20 +3,15 @@
 DOMAIN=$1
 PASSWD=$2
 #v-change-user-contact admin $EMAIL
-
-ADMINPASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
-DBPASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
+#PASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
 apt-get update -y 1>/dev/null
-v-change-database-host-password mysql localhost root $DBPASSWD
+v-change-database-host-password mysql localhost root $PASSWD
 v-change-user-password admin $PASSWD
+mysqladmin -u root password $PASSWD
 v-update-sys-ip
+#sed -i "4s/RemoteIPInternalProxy .\+/RemoteIPInternalProxy {$model->dedicatedip}/g" /etc/apache2/mods-available/remoteip.conf
 v-change-sys-hostname $DOMAIN
 v-add-letsencrypt-host
-
-
-SWAP
-wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap 1>/dev/null
-sh swap 2048 1>/dev/null
 
 echo '======================================='
 echo -e "  
@@ -37,6 +32,6 @@ SSH:
 PhpMyAdmin:
    https://$DOMAIN/phpmyadmin
    username: root
-   pass: $DBPASSWD
+   pass: $PASSWD
 
 " | tee -a /root/.admin
