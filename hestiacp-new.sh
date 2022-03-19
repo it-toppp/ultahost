@@ -2,6 +2,7 @@
 
 DOMAIN=$1
 PASSWD=$2
+IP=$(wget -O - -q ifconfig.me)
 #v-change-user-contact admin $EMAIL
 #PASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
 apt-get update -y 1>/dev/null
