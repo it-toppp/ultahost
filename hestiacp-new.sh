@@ -1,11 +1,11 @@
 #!/bin/bash
 
-DOMAIN=$1
-PASSWD=$2
+#DOMAIN=$1
+#PASSWD=$2
 IP=$(wget -O - -q ifconfig.me)
 DOMAIN=$(hostname)
 #v-change-user-contact admin $EMAIL
-#PASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
+PASSWD=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
 apt-get update -y 1>/dev/null
 v-change-database-host-password mysql localhost root $PASSWD
 v-change-user-password admin $PASSWD
