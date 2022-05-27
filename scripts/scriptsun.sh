@@ -83,7 +83,7 @@ http://$DOMAIN/install/?page=installation | grep -o -e "Failed to connect to MyS
 
 #pixelphoto
 if [ "$SCRIPT" = "pixelphoto" ]; then
-  wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip
+  wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip "Script/*" && mv Script\/{*,.*} ./ &> /dev/null
   rm -f ./install/index.php
   wget https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/pixelphoto/installer.php -O ./install/index.php
   scriptsun
@@ -122,7 +122,7 @@ fi
 
 #quickdate
 if [ "$SCRIPT" = "quickdate" ]; then
-     wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip
+     wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip "Script/*" && mv Script\/{*,.*} ./ &> /dev/null
      scriptsun
      mysql $DBNAME -e "UPDATE options SET option_value = '1' WHERE  option_name = 'ffmpeg_sys';" &> /dev/null
      mysql $DBNAME -e "UPDATE options SET option_value = '/usr/bin/ffmpeg' WHERE option_name = 'ffmpeg_binary';" &> /dev/null
