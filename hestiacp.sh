@@ -139,8 +139,8 @@ sed -i 's|"show_hidden":false|"show_hidden":true|' tinyfilemanager.php
 sed -i "s|.*navbar-brand.*|        <a class="navbar-brand" href=\"/\"> Exit </a>|" tinyfilemanager.php
 sed -i 's|use_auth = true|use_auth = false|' config.php
 #sed -i "s|theme = 'light'|theme = \'dark\'|" config.php
-wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/post_install.sh -O /etc/hestiacp/hooks/post_install.sh
-chmod +x /etc/hestiacp/hooks/post_install.sh
+#wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/post_install.sh -O /etc/hestiacp/hooks/post_install.sh
+#chmod +x /etc/hestiacp/hooks/post_install.sh
 
 #mysql
 cat > /etc/mysql/conf.d/z_custom.cnf << HERE 
