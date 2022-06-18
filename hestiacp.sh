@@ -31,35 +31,6 @@ DIG_IP=$(getent ahostsv4 $DOMAIN | sed -n 's/ *STREAM.*//p')
 #Prepare
 hostnamectl set-hostname $DOMAIN
 echo "$IP  $DOMAIN" >> /etc/hosts
-#touch /etc/apt/sources.list.d/mariadb.list
-#chattr +a /etc/apt/sources.list.d/mariadb.list
-
-if grep -qs "ubuntu" /etc/os-release; then
-	os="ubuntu"
-	os_version=$(grep 'VERSION_ID' /etc/os-release | cut -d '"' -f 2 | tr -d '.')
-	group_name="nogroup"
-elif [[ -e /etc/debian_version ]]; then
-	os="debian"
-	os_version=$(grep -oE '[0-9]+' /etc/debian_version | head -1)
-	group_name="nogroup"
-fi
-
-if [[ "$os" == "ubuntu" && "$os_version" -lt 1804 ]]; then
-	echo "Ubuntu 18.04 "
-fi
-
-if [[ "$os" == "ubuntu" && "$os_version" -lt 2004 ]]; then
-	echo "Ubuntu 20.04 "
-fi
-
-if [[ "$os" == "debian" && "$os_version" == "10" ]]; then
-cat > /etc/apt/sources.list << HERE 
-deb http://deb.debian.org/debian/ buster main
-deb-src http://deb.debian.org/debian/ buster main
-deb http://security.debian.org/debian-security buster/updates main
-deb-src http://security.debian.org/debian-security buster/updates main
-HERE
-fi
 
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMAIN --email admin@$DOMAIN --password $PASSWD 
@@ -71,8 +42,7 @@ bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMA
 #DEB 
 apt-get update 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_16.x | bash -
-apt-get install -y nodejs htop redis-server php7.4-redis php8.0-redis php7.4-sqlite3 php8.0-sqlite3 php7.4-bcmath php8.0-bcmath php7.4-gmp php8.0-gmp 1>/dev/null
-npm install forever -g 1>/dev/null
+apt-get install -y nodejs htop redis-server php7.4-redis php8.1-redis php7.4-sqlite3 php8.1-sqlite3 php7.4-bcmath php8.1-bcmath php7.4-gmp php8.1-gmp 1>/dev/null
 npm install pm2 -g 1>/dev/null
 apt-get install ffmpeg -y --fix-missing 1>/dev/null
 apt-get update 1>/dev/null
@@ -82,6 +52,8 @@ cp /home/admin/.composer/composer /usr/local/bin/
 #Preset
 eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
 grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 1000/g'
+grep -rl  "php_admin_value\[open_basedir\]" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's|php_admin_value\[open_basedir\]|;php_admin_value\[open_basedir\]|g'
+
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_2.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_2.tpl
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_3.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_3.tpl
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_4.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_4.tpl
@@ -89,7 +61,17 @@ cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_0.tpl /usr/local/hestia/da
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_1.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_1.tpl
 #sed -i "s/WEB_TEMPLATE='default'/WEB_TEMPLATE='default'\\nBACKEND_TEMPLATE='new-PHP-7_4'/g" /usr/local/hestia/data/packages/default.pkg
 replace "BACKEND_TEMPLATE='default'" "BACKEND_TEMPLATE='new-PHP-7_4'" -- /usr/local/hestia/data/packages/default.pkg
-#Backup
+
+#HestiaCP
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_web.html
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_web.html
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_db.html
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_db.html
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_mail.html
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_mail.html
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_dns.html
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_dns.html
+
 hou=$(shuf -i 0-23 -n 1)
 min=$(shuf -i 0-55 -n 1)
 v-change-cron-job admin 7 45 $hou '*/3' '*' '*' 'sudo /usr/local/hestia/bin/v-backup-users'
@@ -123,15 +105,42 @@ chmod 755 /usr/local/hestia/data/templates/web/nginx/proxy3000.tpl /usr/local/he
 
 #FIX FM
 grep -rl "directoryPerm = 0744" /usr/local/hestia/web/fm/vendor/league/flysystem-sftp | xargs perl -p -i -e 's/directoryPerm = 0744/directoryPerm = 0755/g'
-#mv /usr/local/hestia/web/fm/configuration.php /usr/local/hestia/web/fm/configuration.php_
-#wget https://raw.githubusercontent.com/hestiacp/hestiacp/main/install/deb/filemanager/filegator/configuration.php -O /usr/local/hestia/web/fm/configuration.php
-wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/filemanager.sh -O /opt/filemanager.sh && chmod +x /opt/filemanager.sh && bash /opt/filemanager.sh
-#crontab -l | { cat; echo "11 11 * * * /bin/curl -SsL https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/filemanager.sh | /bin/bash"; } | crontab -
-
-wget http://downloads2.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
-tar zxf ioncube_loaders_lin_x86-64.tar.gz 
-rm -f xf ioncube_loaders_lin_x86-64.tar.gz
-mv ioncube /usr/local 
+cat > fm_tmp << HERE
+                                <!-- File Manager Alt -->
+                  <?php if ((\$_SESSION['userContext'] === 'admin') && (\$_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes') || (\$_SESSION['user'] === 'admin')) {?>
+                                <?php if ((\$_SESSION['userContext'] === 'admin') && (!empty(\$_SESSION['look']))) {?>
+                                        <!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
+                                <?php } else { ?>
+                        <?php if ((isset(\$_SESSION['FILE_MANAGER'])) && (!empty(\$_SESSION['FILE_MANAGER'])) && (\$_SESSION['FILE_MANAGER'] == "true")) {?>
+                                <?php if ((\$_SESSION['userContext'] === 'admin') && (isset(\$_SESSION['look']) && (\$_SESSION['look'] === 'admin') && (\$_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
+                                                <!-- Hide file manager when impersonating admin-->
+                                        <?php } else { ?>
+                                                <div class="l-menu__item <?php if(\$TAB == 'FM') echo 'l-menu__item--active' ?>"><a href="/fm1/"><i class="fas fa-folder-open panel-icon"></i><?=_('FileManager');?></a></div>
+                                <?php } ?>
+                        <?php } ?>
+            <?php } ?>
+<?php } ?>
+<!-- File Manager -->
+HERE
+sed -i -e '/File Manager tab/r fm_tmp' /usr/local/hestia/web/templates/includes/panel.html
+rm -f fm_tmp
+cp /usr/local/hestia/web/fm /usr/local/hestia/web/fm1
+cd /usr/local/hestia/web/fm1
+rm -f index.php
+wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/index.php
+wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/tinyfilemanager.php
+wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/config-sample.php -O config.php
+wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/translation.json
+chmod 644 config.php tinyfilemanager.php translation.json
+sed -i.bak -e "s/\$root\_path = \$\_SERVER\['DOCUMENT_ROOT'\];/\$root_path = \'\/home\/admin\/web\';/g" config.php
+sed -i 's|max_upload_size_bytes = 2048|max_upload_size_bytes = 10000000000|' config.php
+sed -i 's|timeout: 120000,|timeout: 12000001,|' tinyfilemanager.php
+sed -i 's|"show_hidden":false|"show_hidden":true|' tinyfilemanager.php
+sed -i "s|.*navbar-brand.*|        <a class="navbar-brand" href=\"/\"> Exit </a>|" tinyfilemanager.php
+sed -i 's|use_auth = true|use_auth = false|' config.php
+#sed -i "s|theme = 'light'|theme = \'dark\'|" config.php
+wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/post_install.sh -O /etc/hestiacp/hooks/post_install.sh
+chmod +x /etc/hestiacp/hooks/post_install.sh
 
 #mysql
 cat > /etc/mysql/conf.d/z_custom.cnf << HERE 
@@ -168,8 +177,11 @@ max_input_time = 6000
 zlib.output_compression = Off
 memory_limit = 512M
 HERE
-systemctl restart php$v-fpm
-done
+
+wget http://downloads2.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
+tar zxf ioncube_loaders_lin_x86-64.tar.gz 
+rm -f xf ioncube_loaders_lin_x86-64.tar.gz
+mv ioncube /usr/local 
 
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 for v in "${multiphp_v[@]}"; do
@@ -177,7 +189,6 @@ cat > /etc/php/$v/fpm/conf.d/00-ioncube.ini << HERE
 [Zend Modules]
 zend_extension = /usr/local/ioncube/ioncube_loader_lin_$v.so
 HERE
-
 cat >  /etc/php/$v/cli/conf.d/00-ioncube.ini << HERE
 [Zend Modules]
 zend_extension = /usr/local/ioncube/ioncube_loader_lin_$v.so
@@ -219,13 +230,19 @@ MaxClients          5000
 HERE
 systemctl restart apache2  1>/dev/null
 
-#nginx
-sed -i 's|client_max_body_size            256m|client_max_body_size  10240m|' /etc/nginx/nginx.conf
-sed -i 's|worker_connections  1024;|worker_connections  4096;|' /etc/nginx/nginx.conf
-sed -i 's|send_timeout                    60;|send_timeout  9000;|' /etc/nginx/nginx.conf
-sed -i 's|proxy_connect_timeout           30|proxy_connect_timeout   9000|' /etc/nginx/nginx.conf
-sed -i 's|proxy_send_timeout              180|proxy_send_timeout  9000|' /etc/nginx/nginx.conf
-sed -i 's|proxy_read_timeout              300|proxy_read_timeout  9000|' /etc/nginx/nginx.conf
+#NGINX
+sed -i 's|client_max_body_size.\+|client_max_body_size  10240m|' /etc/nginx/nginx.conf
+sed -i 's|worker_connections.\+|worker_connections  4096;|' /etc/nginx/nginx.conf
+sed -i 's|send_timeout.\+|send_timeout  9000;|' /etc/nginx/nginx.conf
+sed -i 's|proxy_connect_timeout.\+|proxy_connect_timeout   9000;|' /etc/nginx/nginx.conf
+sed -i 's|proxy_send_timeout.\+|proxy_send_timeout  9000;|' /etc/nginx/nginx.conf
+sed -i 's|proxy_read_timeout.\+|proxy_read_timeout  9000;|' /etc/nginx/nginx.conf
+sed -i 's|proxy_buffers.\+|proxy_buffers   4 512k;|' /etc/nginx/nginx.conf
+sed -i '/proxy_buffers   4 512k;/ a \
+    proxy_buffer_size   512k; \
+    proxy_busy_buffers_size   512k; \
+' /etc/nginx/nginx.conf
+sed -i 's|open_file_cache_min_uses.\+|open_file_cache_min_uses 12;|' /etc/nginx/nginx.conf
 systemctl restart nginx 1>/dev/null
 echo "Fix NGINX successfully"
 
