@@ -44,8 +44,6 @@ apt-get update 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_16.x | bash -
 apt-get install -y nodejs htop redis-server php7.4-redis php8.1-redis php7.4-sqlite3 php8.1-sqlite3 php7.4-bcmath php8.1-bcmath php7.4-gmp php8.1-gmp 1>/dev/null
 npm install pm2 -g 1>/dev/null
-apt-get install ffmpeg -y --fix-missing 1>/dev/null
-apt-get update 1>/dev/null
 apt-get install ffmpeg -y 1>/dev/null
 cp /home/admin/.composer/composer /usr/local/bin/
 
@@ -247,9 +245,9 @@ systemctl restart nginx 1>/dev/null
 echo "Fix NGINX successfully"
 
 #SWAP
-wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap  1>/dev/null
-sh swap 2048 1>/dev/null
-rm -Rf swap  1>/dev/null
+#wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap  1>/dev/null
+#sh swap 2048 1>/dev/null
+#rm -Rf swap  1>/dev/null
 
 echo "Full installation completed [ OK ]"
 
