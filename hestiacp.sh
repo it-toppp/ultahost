@@ -175,12 +175,12 @@ max_input_time = 6000
 zlib.output_compression = Off
 memory_limit = 512M
 HERE
+done
 
 wget http://downloads2.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
 tar zxf ioncube_loaders_lin_x86-64.tar.gz 
 rm -f xf ioncube_loaders_lin_x86-64.tar.gz
 mv ioncube /usr/local 
-
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 for v in "${multiphp_v[@]}"; do
 cat > /etc/php/$v/fpm/conf.d/00-ioncube.ini << HERE 
@@ -191,7 +191,6 @@ cat >  /etc/php/$v/cli/conf.d/00-ioncube.ini << HERE
 [Zend Modules]
 zend_extension = /usr/local/ioncube/ioncube_loader_lin_$v.so
 HERE
-
 systemctl restart php$v-fpm
 done
 echo "Fix PHP successfully"
