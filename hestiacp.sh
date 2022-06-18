@@ -44,7 +44,7 @@ apt-get update 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_16.x | bash -
 apt-get install -y nodejs htop redis-server php7.4-redis php8.1-redis php7.4-sqlite3 php8.1-sqlite3 php7.4-bcmath php8.1-bcmath php7.4-gmp php8.1-gmp 1>/dev/null
 npm install pm2 -g 1>/dev/null
-apt-get install ffmpeg -y 1>/dev/null
+#apt-get install ffmpeg -y 1>/dev/null
 cp /home/admin/.composer/composer /usr/local/bin/
 
 #Preset
@@ -122,9 +122,8 @@ cat > fm_tmp << HERE
 HERE
 sed -i -e '/File Manager tab/r fm_tmp' /usr/local/hestia/web/templates/includes/panel.html
 rm -f fm_tmp
-cp /usr/local/hestia/web/fm /usr/local/hestia/web/fm1
+mkdir /usr/local/hestia/web/fm1
 cd /usr/local/hestia/web/fm1
-rm -f index.php
 wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/index.php
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/tinyfilemanager.php
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/config-sample.php -O config.php
@@ -228,7 +227,7 @@ HERE
 systemctl restart apache2  1>/dev/null
 
 #NGINX
-sed -i 's|client_max_body_size.\+|client_max_body_size  10240m|' /etc/nginx/nginx.conf
+sed -i 's|client_max_body_size.\+|client_max_body_size  10240m;|' /etc/nginx/nginx.conf
 sed -i 's|worker_connections.\+|worker_connections  4096;|' /etc/nginx/nginx.conf
 sed -i 's|send_timeout.\+|send_timeout  9000;|' /etc/nginx/nginx.conf
 sed -i 's|proxy_connect_timeout.\+|proxy_connect_timeout   9000;|' /etc/nginx/nginx.conf
