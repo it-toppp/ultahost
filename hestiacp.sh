@@ -61,7 +61,6 @@ deb-src http://security.debian.org/debian-security buster/updates main
 HERE
 fi
 
-mv /usr/sbin/reboot /usr/sbin/reboot_
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMAIN --email admin@$DOMAIN --password $PASSWD 
 
@@ -84,6 +83,7 @@ cp /home/admin/.composer/composer /usr/local/bin/
 eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
 grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 1000/g'
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_2.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_2.tpl
+cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_3.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_3.tpl
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_4.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_4.tpl
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_0.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_0.tpl
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_1.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_1.tpl
@@ -92,7 +92,6 @@ replace "BACKEND_TEMPLATE='default'" "BACKEND_TEMPLATE='new-PHP-7_4'" -- /usr/lo
 #Backup
 hou=$(shuf -i 0-23 -n 1)
 min=$(shuf -i 0-55 -n 1)
-#replace "MIN='10' HOUR='05' DAY='*'" "MIN='$min' HOUR='$hou' DAY='*/3'" -- /usr/local/hestia/data/users/admin/cron.conf
 v-change-cron-job admin 7 45 $hou '*/3' '*' '*' 'sudo /usr/local/hestia/bin/v-backup-users'
 sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/packages/default.pkg
 sed -i "s|BACKUPS='1'|BACKUPS='3'|" /usr/local/hestia/data/users/admin/user.conf
@@ -127,7 +126,7 @@ grep -rl "directoryPerm = 0744" /usr/local/hestia/web/fm/vendor/league/flysystem
 #mv /usr/local/hestia/web/fm/configuration.php /usr/local/hestia/web/fm/configuration.php_
 #wget https://raw.githubusercontent.com/hestiacp/hestiacp/main/install/deb/filemanager/filegator/configuration.php -O /usr/local/hestia/web/fm/configuration.php
 wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/filemanager.sh -O /opt/filemanager.sh && chmod +x /opt/filemanager.sh && bash /opt/filemanager.sh
-crontab -l | { cat; echo "11 11 * * * /bin/curl -SsL https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/filemanager.sh | /bin/bash"; } | crontab -
+#crontab -l | { cat; echo "11 11 * * * /bin/curl -SsL https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/filemanager.sh | /bin/bash"; } | crontab -
 
 wget http://downloads2.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
 tar zxf ioncube_loaders_lin_x86-64.tar.gz 
@@ -137,21 +136,17 @@ mv ioncube /usr/local
 #mysql
 cat > /etc/mysql/conf.d/z_custom.cnf << HERE 
 [mysqld]
-    query_cache_size = 0
-    query_cache_type = 0
-    query_cache_limit = 8M
-    join_buffer_size = 2M
-    table_open_cache = 8192
-    table_definition_cache = 1000
-    thread_cache_size = 500
-    tmp_table_size = 256M
-    innodb_buffer_pool_size = 1G
-    sql_mode = NO_ENGINE_SUBSTITUTION
-    max_heap_table_size  = 256M
-    max_allowed_packet = 1024M
-    max_connections = 20000
-    max_user_connections = 5000
-    wait_timeout = 100000
+query_cache_type = 1
+query_cache_limit = 256K
+query_cache_min_res_unit = 2k
+query_cache_size = 80M
+innodb_buffer_pool_size = 200M
+sql_mode = NO_ENGINE_SUBSTITUTION
+max_heap_table_size  = 256M
+max_allowed_packet = 1024M
+max_connections = 20000
+max_user_connections = 5000
+wait_timeout = 100000
        
 HERE
 systemctl restart  mysql 1>/dev/null
@@ -168,10 +163,10 @@ post_max_size = 10240M
 upload_max_filesize = 10240M
 output_buffering = Off
 max_execution_time = 6000
-max_input_vars = 9000
+max_input_vars = 10000
 max_input_time = 6000
 zlib.output_compression = Off
-memory_limit = 600M
+memory_limit = 512M
 HERE
 systemctl restart php$v-fpm
 done
@@ -239,9 +234,7 @@ wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap  1>/
 sh swap 2048 1>/dev/null
 rm -Rf swap  1>/dev/null
 
-mv /usr/sbin/reboot_ /usr/sbin/reboot
 echo "Full installation completed [ OK ]"
-#chown admin:www-data /home/admin/web/$DOMAIN/public_html
 
 if [ ! -z "$SCRIPT" ]; then
 curl -O https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scriptsun.sh && bash scriptsun.sh $DOMAIN $SCRIPT $PURSHCODE
@@ -254,23 +247,19 @@ Control Panel:
     https://$DOMAIN:8083
     username: admin
     password: $PASSWD
-
  FTP:
    host: $IP
    port: 21
    username: admin
    password: $PASSWD
-
 SSH:
    host: $IP
    username: root
    password: $PASSWD
-
 PhpMyAdmin:
    https://$DOMAIN/phpmyadmin
    username=root
    $(grep pass /root/.my.cnf | tr --delete \')
-
 DB:
    db_name: admin_$DB
    db_user: admin_$DB
