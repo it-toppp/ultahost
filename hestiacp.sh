@@ -39,14 +39,6 @@ bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMA
 #/usr/local/vesta/bin/v-add-letsencrypt-domain admin $DOMAIN www.$DOMAIN "yes"
 #fi
 
-#DEB 
-apt-get update 1>/dev/null
-curl -sL https://deb.nodesource.com/setup_16.x | bash -
-apt-get install -y nodejs htop redis-server php7.4-redis php8.1-redis php7.4-sqlite3 php8.1-sqlite3 php7.4-bcmath php8.1-bcmath php7.4-gmp php8.1-gmp 1>/dev/null
-npm install pm2 -g 1>/dev/null
-apt-get install ffmpeg -y 1>/dev/null
-cp /home/admin/.composer/composer /usr/local/bin/
-
 #Preset
 eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
 grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 1000/g'
@@ -137,7 +129,7 @@ sed -i "s|.*navbar-brand.*|        <a class="navbar-brand" href=\"/\"> Exit </a>
 sed -i 's|use_auth = true|use_auth = false|' config.php
 #sed -i "s|theme = 'light'|theme = \'dark\'|" config.php
 mkdir /etc/hestiacp/hooks
-wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/post_install.sh -O /etc/hestiacp/hooks/post_install.sh
+wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestia_post_install.sh -O /etc/hestiacp/hooks/post_install.sh
 chmod +x /etc/hestiacp/hooks/post_install.sh
 
 #mysql
@@ -160,6 +152,7 @@ systemctl restart  mysql 1>/dev/null
 echo "Fix MYSQL successfully"
 
 #PHP
+apt-get install redis-server php7.4-redis php8.1-redis php7.4-sqlite3 php8.1-sqlite3 php7.4-bcmath php8.1-bcmath php7.4-gmp php8.1-gmp 1>/dev/null
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 for v in "${multiphp_v[@]}"; do
 cat >>  /etc/php/$v/fpm/php.ini << HERE 
@@ -249,6 +242,14 @@ wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap  1>/
 sh swap 2048 1>/dev/null
 rm -Rf swap  1>/dev/null
 fi
+
+#DEB 
+cp /home/admin/.composer/composer /usr/local/bin/
+curl -sL https://deb.nodesource.com/setup_16.x | bash -
+apt-get install -y nodejs
+npm install pm2 -g 1>/dev/null
+npm install yarn -g 1>/dev/null
+apt-get install ffmpeg -y 1>/dev/null
 
 echo "Full installation completed [ OK ]"
 
