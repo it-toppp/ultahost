@@ -43,7 +43,16 @@ fi
 rm -rf mkdir /usr/local/hestia/web/fm1 2>/dev/null
 mkdir /usr/local/hestia/web/fm1
 cd /usr/local/hestia/web/fm1
-wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/index.php
+cat > index.php << HERE
+<?php
+error_reporting(NULL);
+\$TAB = 'USER';
+include(\$_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+define('FM_EMBED', true);
+define('FM_SELF_URL', \$_SERVER['PHP_SELF']);
+require 'tinyfilemanager.php';
+\$_SESSION['back'] = \$_SERVER['REQUEST_URI'];
+HERE
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/tinyfilemanager.php
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/config-sample.php -O config.php
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/translation.json
