@@ -44,7 +44,7 @@ apt-get update 1>/dev/null
 curl -sL https://deb.nodesource.com/setup_16.x | bash -
 apt-get install -y nodejs htop redis-server php7.4-redis php8.1-redis php7.4-sqlite3 php8.1-sqlite3 php7.4-bcmath php8.1-bcmath php7.4-gmp php8.1-gmp 1>/dev/null
 npm install pm2 -g 1>/dev/null
-#apt-get install ffmpeg -y 1>/dev/null
+apt-get install ffmpeg -y 1>/dev/null
 cp /home/admin/.composer/composer /usr/local/bin/
 
 #Preset
@@ -136,8 +136,9 @@ sed -i 's|"show_hidden":false|"show_hidden":true|' tinyfilemanager.php
 sed -i "s|.*navbar-brand.*|        <a class="navbar-brand" href=\"/\"> Exit </a>|" tinyfilemanager.php
 sed -i 's|use_auth = true|use_auth = false|' config.php
 #sed -i "s|theme = 'light'|theme = \'dark\'|" config.php
-#wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/post_install.sh -O /etc/hestiacp/hooks/post_install.sh
-#chmod +x /etc/hestiacp/hooks/post_install.sh
+mkdir /etc/hestiacp/hooks
+wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/post_install.sh -O /etc/hestiacp/hooks/post_install.sh
+chmod +x /etc/hestiacp/hooks/post_install.sh
 
 #mysql
 cat > /etc/mysql/conf.d/z_custom.cnf << HERE 
@@ -195,7 +196,7 @@ done
 echo "Fix PHP successfully"
 
 #Apache
-a2enmod headers 
+a2enmod headers 1>/dev/null
 cat > /etc/apache2/mods-enabled/fcgid.conf << HERE 
 <IfModule mod_fcgid.c>
   FcgidConnectTimeout 20
@@ -243,9 +244,11 @@ systemctl restart nginx 1>/dev/null
 echo "Fix NGINX successfully"
 
 #SWAP
-#wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap  1>/dev/null
-#sh swap 2048 1>/dev/null
-#rm -Rf swap  1>/dev/null
+if [ ! -f "/swapfile" ]; then
+wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap  1>/dev/null
+sh swap 2048 1>/dev/null
+rm -Rf swap  1>/dev/null
+fi
 
 echo "Full installation completed [ OK ]"
 
