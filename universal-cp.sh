@@ -89,7 +89,7 @@ hestiacp
 fi
 
 if [ -d "/usr/local/cpanel" ]; then
-cyberpanel
+cpanel
 fi
 
 if [ -d "/etc/cyberpanel" ]; then
