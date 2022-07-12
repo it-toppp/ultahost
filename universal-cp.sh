@@ -84,18 +84,18 @@ SSH:
 " | tee -a /root/.admin
 }
 
-if [ ! -d "/usr/local/hestia" ]; then
+if [ -d "/usr/local/hestia" ]; then
 hestiacp
 fi
 
-if [ ! -d "/usr/local/cpanel" ]; then
+if [ -d "/usr/local/cpanel" ]; then
 cyberpanel
 fi
 
-if [ ! -d "/etc/cyberpanel" ]; then
+if [ -d "/etc/cyberpanel" ]; then
 cyberpanel
 fi
 
-if [ ! -d "/www/server/panel/BTPanel" ]; then
+if [ -d "/www/server/panel/BTPanel" ]; then
 aapanel
 fi
