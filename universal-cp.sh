@@ -39,15 +39,23 @@ PhpMyAdmin:
 }
 
 function cpanel() {
-PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/local/hestia/bin"
-/usr/local/hestia/bin/v-change-database-host-password mysql localhost root $password
-/usr/local/hestia/bin/v-change-user-password admin $password
-/usr/bin/mysqladmin -u root password $password
-/usr/bin/sed -i "1s/password .\+/ password=$password/g"   /root/.my.cnf
-/usr/local/hestia/bin/v-update-sys-ip
-/usr/bin/sed -i "4s/RemoteIPInternalProxy .\+/RemoteIPInternalProxy $IP/g" /etc/apache2/mods-available/remoteip.conf
-/usr/local/hestia/bin/v-change-sys-hostname $domain
-/usr/local/hestia/bin/v-add-letsencrypt-host
+/usr/bin/sed -i "1s/password.\+/ password=$password/g" /root/.my.cnf
+/usr/bin/sed -i "1s/ADDR .\+/ADDR $IP/g" /etc/wwwacct.conf
+/scripts/mainipcheck
+/usr/sbin/whmapi1 set_local_mysql_root_password password=$password
+/usr/local/cpanel/bin/set_hostname $domain
+echo '======================================='
+echo -e "  
+Here is your Control Panel login info:
+Control Panel:
+    https://$domain:2087
+    username: admin
+    password: $password
+SSH:
+   host: $IP
+   username: root
+   password: $password
+" | tee -a /root/.admin
 }
 
 function cyberpanel() {
