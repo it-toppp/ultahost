@@ -49,7 +49,7 @@ echo -e "
 Here is your Control Panel login info:
 Control Panel:
     https://$domain:2087
-    username: admin
+    username: root
     password: $password
 SSH:
    host: $IP
