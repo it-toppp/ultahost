@@ -102,7 +102,7 @@ if [ "$SCRIPT" = "wowonder" ] ; then
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '1' WHERE  name = 'nodejs_ssl';" &> /dev/null
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '1' WHERE  name = 'nodejs_live_notification';" &> /dev/null
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.key' WHERE  name = 'nodejs_key_path';" &> /dev/null
-    mysql $DBNAME -e "UPDATE Wo_Config SET value = '/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.crt' WHERE  name = 'nodejs_cert_path';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = '/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.pem' WHERE  name = 'nodejs_cert_path';" &> /dev/null
     v-add-firewall-rule ACCEPT 0.0.0.0/0 449
     cd /home/$user/web/$DOMAIN/public_html/nodejs
     npm install &> /dev/null
