@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DOMAIN=$1
-PASSWD=$2
+domain=$1
+password=$2
 IP=$(wget -O - -q ifconfig.me)
 /usr/sbin/plesk bin ipmanage --remap /root/ip_map_file
 /usr/sbin/plesk bin ipmanage --remap /root/ip_map_file
