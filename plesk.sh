@@ -4,7 +4,7 @@ domain=$1
 password=$2
 IP=$(wget -O - -q ifconfig.me)
 /usr/sbin/plesk bin ipmanage --remap /root/ip_map_file
-/usr/sbin/plesk bin ipmanage --remap /root/ip_map_file
+/usr/sbin/plesk bin ipmanage --remap /root/ip_map_file -drop-if-exists
 rm -f /root/ip_map_file 
 /usr/sbin/plesk bin server_pref --update -hostname $domain
 /etc/init.d/sw-cp-server restart
