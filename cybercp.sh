@@ -5,7 +5,8 @@ password=$2
 IP=$(wget -O - -q ifconfig.me)
 mysql cyberpanel -e "ALTER USER 'cyberpanel'@'localhost' IDENTIFIED BY '$password';"
 /usr/bin/mysqladmin --defaults-file=/root/.my.cnf -u root password $password
-/usr/bin/sed -i "s/\'PASSWORD.\+/PASSWORD\'\: \'$password\',/g" /usr/local/CyberCP/CyberCP/settings.py
+#/usr/bin/sed -i "s/\'PASSWORD.\+/PASSWORD\'\: \'$password\',/g" /usr/local/CyberCP/CyberCP/settings.py
+/usr/bin/sed -i "s/'PASSWORD.\+/'PASSWORD'\: '$password',/g" /usr/local/CyberCP/CyberCP/settings.py
 /usr/bin/sed -i "s/password.\+/password=$password/g" /root/.my.cnf
 echo $IP > /etc/cyberpanel/machineIP
 echo $password > /etc/cyberpanel/adminPass
