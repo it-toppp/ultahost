@@ -21,7 +21,10 @@ echo $password > /etc/cyberpanel/mysqlPassword
 /usr/bin/adminPass $password
 /usr/bin/cyberpanel createWebsite --package Default --owner admin --domainName $domain --email user@ultasrv.com --php 8.0
 /usr/bin/cyberpanel hostNameSSL --domainName $domain
-systemctl restart lscpd
+/etc/init.d/ lscpd restart
+/etc/init.d/pure-ftpd-mysql restart
+/etc/init.d/pdns restart
+/etc/init.d/postfix restart
 echo '======================================='
 echo -e "  
 Here is your Control Panel login info:
