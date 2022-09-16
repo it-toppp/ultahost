@@ -5,7 +5,7 @@ password=$2
 IP=$(wget -O - -q ifconfig.me)
 #
 /usr/bin/mysqladmin --defaults-file=/root/.my.cnf -u root password $password
-mysql --defaults-file=/root/.my.cnf cyberpanel -e "ALTER USER 'cyberpanel'@'localhost' IDENTIFIED BY '$password';"
+mysql --defaults-file=/root/.my.cnf -u root cyberpanel -e "ALTER USER 'cyberpanel'@'localhost' IDENTIFIED BY '$password';"
 #
 #/usr/bin/sed -i "s/\'PASSWORD.\+/PASSWORD\'\: \'$password\',/g" /usr/local/CyberCP/CyberCP/settings.py
 /usr/bin/sed -i "s/'PASSWORD.\+/'PASSWORD'\: '$password',/g" /usr/local/CyberCP/CyberCP/settings.py
