@@ -12,11 +12,11 @@ mysql -uroot -p$password cyberpanel -e "ALTER USER 'cyberpanel'@'localhost' IDEN
 
 /usr/bin/sed -i "s/MYSQLPassword .\+/MYSQLPassword $password/g" /etc/pure-ftpd/pureftpd-mysql.conf
 /usr/bin/sed -i "s/MYSQLPassword .\+/MYSQLPassword $password/g" /etc/pure-ftpd/db/mysql.conf
-
 /usr/bin/sed -i "s/password =.\+/password = $password/g" /etc/postfix/mysql-virtual_*
 
 /usr/bin/sed -i "s/gmysql-password=.\+/gmysql-password=$password/g" /etc/powerdns/pdns.conf
 /usr/bin/sed -i "s/password =.\+/password = $password/g"/etc/pdns/pdns.conf
+/usr/bin/sed -i "s/password=.\+/password=$password/g" /etc/dovecot/dovecot-sql.conf.ext
 #
 echo $IP > /etc/cyberpanel/machineIP
 echo $password > /etc/cyberpanel/adminPass
