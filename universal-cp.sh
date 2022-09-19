@@ -7,6 +7,9 @@ IP=$(wget -O - -q ifconfig.me)
 
 function hestiacp() {
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/local/hestia/bin"
+hou=$(shuf -i 0-23 -n 1)
+min=$(shuf -i 0-55 -n 1)
+v-change-cron-job admin 7 45 $hou '*/3' '*' '*' 'sudo /usr/local/hestia/bin/v-backup-users'
 /usr/local/hestia/bin/v-change-database-host-password mysql localhost root $password
 /usr/local/hestia/bin/v-change-user-password admin $password
 /usr/bin/mysqladmin -u root password $password
