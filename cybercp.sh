@@ -20,8 +20,8 @@ echo $IP > /etc/cyberpanel/machineIP
 echo $password > /etc/cyberpanel/adminPass
 #echo $password > /etc/cyberpanel/mysqlPassword
 /usr/bin/adminPass $password
-/usr/bin/cyberpanel createWebsite --package Default --owner admin --domainName $domain --email user@ultasrv.com --php 8.0
-/usr/bin/cyberpanel hostNameSSL --domainName $domain
+#/usr/bin/cyberpanel createWebsite --package Default --owner admin --domainName $domain --email user@ultasrv.com --php 8.0
+#/usr/bin/cyberpanel hostNameSSL --domainName $domain
 systemctl restart lscpd
 systemctl restart pure-ftpd*
 systemctl restart pdns
