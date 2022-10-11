@@ -25,11 +25,9 @@ if [ ! -f "/home/$user/conf/web/$DOMAIN/ssl/$DOMAIN.pem" ]; then
     v-schedule-letsencrypt-domain $user $DOMAIN www.$DOMAIN
 fi
 
-if [ ! -f "/usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_0.tpl" ]; then
+if [ ! -f "/usr/local/hestia/data/templates/web/php-fpm/PHP-8_1.tpl" ]; then
 grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 1000/g'
-cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_4.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_4.tpl
-cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_0.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_0.tpl
-v-change-web-domain-backend-tpl $user $DOMAIN new-PHP-8_0
+v-change-web-domain-backend-tpl $user $DOMAIN new-PHP-8_1
 fi
 
 cd $WORKINGDIR
@@ -44,7 +42,6 @@ cd /home/$user/web/$DOMAIN/public_html
 /home/$user/wp core download --allow-root
 /home/$user/wp core config --dbname=$DBNAME --dbuser=$DBUSER --dbpass=$DBPASSWD --allow-root
 /home/$user/wp core install --url="$DOMAIN" --title="$DOMAIN" --admin_user=admin --admin_password="$DBPASSWD" --admin_email="$email" --path=$WORKINGDIR --allow-root
-#FIX za https://github.com/wp-cli/wp-cli/issues/2632
 mysql -u$DBUSER -p$DBPASSWD $DBNAME -e "update wp_options set option_value = 'https://$DOMAIN' where option_name = 'siteurl'; update wp_options set option_value = 'https://$DOMAIN' where option_name = 'home';"
 chown -R $user:$user $WORKINGDIR
 rm -rf /home/$user/wp
@@ -95,7 +92,12 @@ fi
 if [ "$SCRIPT" = "wowonder" ] ; then
     wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip "Script/*" && mv Script\/{*,.*} ./ &> /dev/null
     scriptsun
-    mysql $DBNAME -e "UPDATE Wo_Config SET value = 'on' WHERE  name = 'ffmpeg_system';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = 'smtp' WHERE  name = 'smtp_or_mail';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = 'mail.$DOMAIN' WHERE  name = 'smtp_host';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = 'info@$DOMAIN' WHERE  name = 'smtp_username';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = 'tls' WHERE  name = 'smtp_encryption';" &> /dev/null
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = '$DBPASSWD' WHERE  name = 'smtp_password';" &> /dev/null
+    
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '449' WHERE  name = 'nodejs_ssl_port';" &> /dev/null
     mysql $DBNAME -e "UPDATE Wo_Config SET value = '1' WHERE  name = 'node_socket_flow';" &> /dev/null
@@ -110,14 +112,22 @@ if [ "$SCRIPT" = "wowonder" ] ; then
     pm2 start main.js --name "wowonder_$DOMAIN"
     pm2 startup &> /dev/null
     pm2 save  &> /dev/null
-fi
+    crontab -l | { cat; echo "*/5 * * * * curl https://$DOMAIN/cron-job.php &>/dev/null"; } | crontab -
+  fi
 
 #playtube,deepsound,flame
 if [ "$SCRIPT" = "playtube" ] || [ "$SCRIPT" = "deepsound" ]|| [ "$SCRIPT" = "flame" ]; then
     wget http://ss.ultahost.com/$SCRIPT.zip && unzip -qo $SCRIPT.zip "Script/*" && mv Script\/{*,.*} ./ &> /dev/null
     scriptsun
+    mysql $DBNAME -e "UPDATE Wo_Config SET value = 'smtp' WHERE  name = 'smtp_or_mail';" &> /dev/null
+    mysql $DBNAME -e "UPDATE config SET value = 'mail.$DOMAIN' WHERE  name = 'smtp_host';" &> /dev/null
+    mysql $DBNAME -e "UPDATE config SET value = 'info@$DOMAIN' WHERE  name = 'smtp_username';" &> /dev/null
+    mysql $DBNAME -e "UPDATE config SET value = 'tls' WHERE  name = 'smtp_encryption';" &> /dev/null
+    mysql $DBNAME -e "UPDATE config SET value = '$DBPASSWD' WHERE  name = 'smtp_password';" &> /dev/null
     mysql $DBNAME -e "UPDATE config SET value = 'on' WHERE  name = 'ffmpeg_system';" &> /dev/null
-    mysql $DBNAME -e "UPDATE config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null  
+    mysql $DBNAME -e "UPDATE config SET value = '/usr/bin/ffmpeg' WHERE  name = 'ffmpeg_binary_file';" &> /dev/null 
+    mkdir sitemap && chmod 777 sitemap
+    crontab -l | { cat; echo "*/5 * * * * curl https://$DOMAIN/cron-job.php &>/dev/null"; } | crontab -
 fi
 
 #quickdate
@@ -127,6 +137,7 @@ if [ "$SCRIPT" = "quickdate" ]; then
      mysql $DBNAME -e "UPDATE options SET option_value = '1' WHERE  option_name = 'ffmpeg_sys';" &> /dev/null
      mysql $DBNAME -e "UPDATE options SET option_value = '/usr/bin/ffmpeg' WHERE option_name = 'ffmpeg_binary';" &> /dev/null
      v-change-web-domain-backend-tpl $user $DOMAIN new-PHP-7_4
+     crontab -l | { cat; echo "*/5 * * * * curl https://$DOMAIN/cron-job.php &>/dev/null"; } | crontab -
 fi
 
 # wordpress
