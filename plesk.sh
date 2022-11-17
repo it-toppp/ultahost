@@ -17,7 +17,7 @@ HERE
 #
 rm -fr /usr/local/psa/admin/plib/modules/OsSav
 rm -fr /usr/local/psa/admin/htdocs/modules/OsSav
-replace 'function OsSav_' '//function OsSav_' -- /usr/local/psa/admin/cp/public/javascript/main.js
+replace 'function OsSav' '//function OsSav_' -- /usr/local/psa/admin/cp/public/javascript/main.js
 echo '======================================='
 echo -e "  
 Here is your Control Panel login info:
