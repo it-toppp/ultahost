@@ -54,16 +54,23 @@ require 'tinyfilemanager.php';
 \$_SESSION['back'] = \$_SERVER['REQUEST_URI'];
 HERE
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/tinyfilemanager.php
-wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/config-sample.php -O config.php
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/translation.json
+cat > /usr/local/hestia/web/fm1/config.php << HERE 
+<?php
+\$root_path = '/home/admin/web';
+\$edit_files = true;
+\$root_url = '';
+\$override_file_name = true;
+\$use_auth = false;
+?>
+HERE
 chmod 644 config.php tinyfilemanager.php translation.json
-sed -i.bak -e "s/\$root\_path = \$\_SERVER\['DOCUMENT_ROOT'\];/\$root_path = \'\/home\/admin\/web\';/g" config.php
-sed -i 's|max_upload_size_bytes = 2048|max_upload_size_bytes = 10000000000|' config.php
+
 sed -i 's|timeout: 120000,|timeout: 12000001,|' tinyfilemanager.php
 sed -i 's|"show_hidden":false|"show_hidden":true|' tinyfilemanager.php
+sed -i 's|override_file_name = false|override_file_name = true|' tinyfilemanager.php
 sed -i "s|.*navbar-brand.*|        <a class="navbar-brand" href=\"/\"> Exit </a>|" tinyfilemanager.php
 sed -i 's|use_auth = true|use_auth = false|' config.php
-#sed -i "s|theme = 'light'|theme = \'dark\'|" config.php
 
 #hestia
 sed -i 's|client_max_body_size.\+|client_max_body_size  10240m;|' /usr/local/hestia/nginx/conf/nginx.conf
