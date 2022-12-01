@@ -18,6 +18,9 @@ v-change-cron-job admin 7 45 $hou '*/3' '*' '*' 'sudo /usr/local/hestia/bin/v-ba
 /usr/bin/sed -i "4s/RemoteIPInternalProxy .\+/RemoteIPInternalProxy $IP/g" /etc/apache2/mods-available/remoteip.conf
 /usr/local/hestia/bin/v-change-sys-hostname $domain
 /usr/local/hestia/bin/v-add-letsencrypt-host
+wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestia_post_install.sh -O /etc/hestiacp/hooks/post_install.sh
+chmod +x /etc/hestiacp/hooks/post_install.sh
+bash /etc/hestiacp/hooks/post_install.sh
 echo '======================================='
 echo -e "  
 Here is your Control Panel login info:
