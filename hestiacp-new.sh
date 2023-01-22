@@ -14,6 +14,7 @@ v-update-sys-ip
 #sed -i "4s/RemoteIPInternalProxy .\+/RemoteIPInternalProxy {$model->dedicatedip}/g" /etc/apache2/mods-available/remoteip.conf
 v-change-sys-hostname $DOMAIN
 v-add-letsencrypt-host
+echo "root:$PASSWD" | chpasswd
 
 echo '======================================='
 echo -e "  
