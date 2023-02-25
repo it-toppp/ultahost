@@ -54,7 +54,7 @@ require 'tinyfilemanager.php';
 \$_SESSION['back'] = \$_SERVER['REQUEST_URI'];
 HERE
 #wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/tinyfilemanager.php
-wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/2.5.3/tinyfilemanager.php
+wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/2.4.7/tinyfilemanager.php
 wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/translation.json
 cat > /usr/local/hestia/web/fm1/config.php << HERE 
 <?php
