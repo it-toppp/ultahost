@@ -1,13 +1,13 @@
 #!/bin/bash
 #fix_templates
-replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_web.html
-replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_web.html
-replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_db.html
-replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_db.html
-replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_mail.html
-replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_mail.html
-replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_dns.html
-replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_dns.html
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_web.php
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_web.php
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_db.php
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_db.php
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_mail.php
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_mail.php
+replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_dns.php
+replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_dns.php
 
 #PHP
 grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 1000/g'
@@ -16,7 +16,7 @@ grep -rl  "php_admin_value\[open_basedir\]" /etc/php /usr/local/hestia/data/temp
 #FIX FM
 grep -rl "directoryPerm = 0744" /usr/local/hestia/web/fm/vendor/league/flysystem-sftp | xargs perl -p -i -e 's/directoryPerm = 0744/directoryPerm = 0755/g'
 
-if grep "FileManager" /usr/local/hestia/web/templates/includes/panel.html; then
+if grep "FileManager2" /usr/local/hestia/web/templates/includes/panel.php; then
 echo "pass"
 else
 cat > fm_tmp << HERE
@@ -29,14 +29,14 @@ cat > fm_tmp << HERE
                                 <?php if ((\$_SESSION['userContext'] === 'admin') && (isset(\$_SESSION['look']) && (\$_SESSION['look'] === 'admin') && (\$_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
                                                 <!-- Hide file manager when impersonating admin-->
                                         <?php } else { ?>
-                                                <div class="l-menu__item <?php if(\$TAB == 'FM') echo 'l-menu__item--active' ?>"><a href="/fm1/"><i class="fas fa-folder-open panel-icon"></i><?=_('FileManager');?></a></div>
+                                                <div class="l-menu__item <?php if(\$TAB == 'FM') echo 'l-menu__item--active' ?>"><a href="/fm1/"><i class="fas fa-folder-open panel-icon"></i><?=_('FileManager2');?></a></div>
                                 <?php } ?>
                         <?php } ?>
             <?php } ?>
 <?php } ?>
 <!-- File Manager -->
 HERE
-sed -i -e '/File Manager tab/r fm_tmp' /usr/local/hestia/web/templates/includes/panel.html
+sed -i -e '/File Manager tab/r fm_tmp' /usr/local/hestia/web/templates/includes/panel.php
 rm -f fm_tmp
 fi
 
