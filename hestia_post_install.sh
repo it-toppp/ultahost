@@ -22,7 +22,7 @@ else
 cat > fm_tmp << HERE
 <!-- File Manager -->
                                                 <?php if (isset(\$_SESSION["FILE_MANAGER"]) && !empty(\$_SESSION["FILE_MANAGER"]) && \$_SESSION["FILE_MANAGER"] == "true") { ?>
-                                                        <?php if (\$_SESSION["userContext"] === "admin" && (isset($_SESSION["look"]) && \$_SESSION["look"] === "admin" && \$_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes")) { ?>
+                                                        <?php if (\$_SESSION["userContext"] === "admin" && (isset(\$_SESSION["look"]) && \$_SESSION["look"] === "admin" && \$_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes")) { ?>
                                                                 <!-- Hide file manager when impersonating admin-->
                                                         <?php } else { ?>
                                                                 <li class="top-bar-menu-item">
