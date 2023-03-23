@@ -16,7 +16,7 @@ grep -rl  "php_admin_value\[open_basedir\]" /etc/php /usr/local/hestia/data/temp
 #FIX FM
 grep -rl "directoryPerm = 0744" /usr/local/hestia/web/fm/vendor/league/flysystem-sftp | xargs perl -p -i -e 's/directoryPerm = 0744/directoryPerm = 0755/g'
 
-if grep "FileManagerAlt" /usr/local/hestia/web/templates/includes/panel.php; then
+if grep "AltFileManager" /usr/local/hestia/web/templates/includes/panel.php; then
 echo "pass"
 else
 cat > fm_tmp << HERE
