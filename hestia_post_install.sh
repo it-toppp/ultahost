@@ -34,9 +34,8 @@ cat > fm_tmp << HERE
                         <?php } ?>
             <?php } ?>
 <?php } ?>
-<!-- File Manager -->
 HERE
-sed -i -e '/<!-- File Manager -->/r fm_tmp' /usr/local/hestia/web/templates/includes/panel.php
+sed -i -e '/top-bar-menu-list/r fm_tmp' /usr/local/hestia/web/templates/includes/panel.php
 rm -f fm_tmp
 fi
 
