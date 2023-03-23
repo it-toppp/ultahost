@@ -20,20 +20,20 @@ if grep "FileManagerAlt" /usr/local/hestia/web/templates/includes/panel.php; the
 echo "pass"
 else
 cat > fm_tmp << HERE
-                                <!-- FileManagerAlt -->
-                  <?php if ((\$_SESSION['userContext'] === 'admin') && (\$_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes') || (\$_SESSION['user'] === 'admin')) {?>
-                                <?php if ((\$_SESSION['userContext'] === 'admin') && (!empty(\$_SESSION['look']))) {?>
-                                        <!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
-                                <?php } else { ?>
-                        <?php if ((isset(\$_SESSION['FILE_MANAGER'])) && (!empty(\$_SESSION['FILE_MANAGER'])) && (\$_SESSION['FILE_MANAGER'] == "true")) {?>
-                                <?php if ((\$_SESSION['userContext'] === 'admin') && (isset(\$_SESSION['look']) && (\$_SESSION['look'] === 'admin') && (\$_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
-                                                <!-- Hide file manager when impersonating admin-->
-                                        <?php } else { ?>
-                                                <div class="l-menu__item <?php if(\$TAB == 'FM') echo 'l-menu__item--active' ?>"><a href="/fm1/"><i class="fas fa-folder-open panel-icon"></i><?=_('FileManagerAlt');?></a></div>
-                                <?php } ?>
-                        <?php } ?>
-            <?php } ?>
-<?php } ?>
+<!-- File Manager -->
+                                                <?php if (isset($_SESSION["FILE_MANAGER"]) && !empty($_SESSION["FILE_MANAGER"]) && $_SESSION["FILE_MANAGER"] == "true") { ?>
+                                                        <?php if ($_SESSION["userContext"] === "admin" && (isset($_SESSION["look"]) && $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes")) { ?>
+                                                                <!-- Hide file manager when impersonating admin-->
+                                                        <?php } else { ?>
+                                                                <li class="top-bar-menu-item">
+                                                                        <a title="<?= _("Alt File manager") ?>" class="top-bar-menu-link <?php if($TAB == 'FM') echo 'active' ?>" href="/fm/">
+                                                                                <i class="fas fa-folder-open"></i>
+                                                                                <span class="top-bar-menu-link-label u-hide-desktop"><?= _("Alt File manager") ?></span>
+                                                                        </a>
+                                                                </li>
+                                                        <?php } ?>
+                                                <?php } ?>
+
 HERE
 sed -i -e '/top-bar-menu-list/r fm_tmp' /usr/local/hestia/web/templates/includes/panel.php
 rm -f fm_tmp
