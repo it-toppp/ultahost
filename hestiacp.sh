@@ -42,25 +42,13 @@ bash hst-install.sh --multiphp yes --clamav no --interactive no --hostname $DOMA
 #Preset
 eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
 grep -rl  "pm.max_children = 8" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's/pm.max_children = 8/pm.max_children = 1000/g'
-grep -rl  "php_admin_value\[open_basedir\]" /etc/php /usr/local/hestia/data/templates/web/php-fpm | xargs perl -p -i -e 's|php_admin_value\[open_basedir\]|;php_admin_value\[open_basedir\]|g'
+grep -rl  "php_admin_value\[open_basedir\]" /etc/php | xargs perl -p -i -e 's|php_admin_value\[open_basedir\]|;php_admin_value\[open_basedir\]|g'
 
-cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_2.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_2.tpl
-cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_3.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_3.tpl
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-7_4.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-7_4.tpl
-cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_0.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_0.tpl
 cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_1.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_1.tpl
+cp /usr/local/hestia/data/templates/web/php-fpm/PHP-8_2.tpl /usr/local/hestia/data/templates/web/php-fpm/new-PHP-8_2.tpl
 #sed -i "s/WEB_TEMPLATE='default'/WEB_TEMPLATE='default'\\nBACKEND_TEMPLATE='new-PHP-7_4'/g" /usr/local/hestia/data/packages/default.pkg
 replace "BACKEND_TEMPLATE='default'" "BACKEND_TEMPLATE='new-PHP-7_4'" -- /usr/local/hestia/data/packages/default.pkg
-
-#HestiaCP
-replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_web.html
-replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_web.html
-replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_db.html
-replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_db.html
-replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_mail.html
-replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_mail.html
-replace "== 'admin'" "== '0admin'" -- /usr/local/hestia/web/templates/pages/add_dns.html
-replace '== "admin"' '== "0admin"' -- /usr/local/hestia/web/templates/pages/add_dns.html
 
 hou=$(shuf -i 0-23 -n 1)
 min=$(shuf -i 0-55 -n 1)
@@ -71,11 +59,9 @@ cp /usr/local/hestia/data/packages/default.pkg /usr/local/hestia/data/packages/n
 v-change-user-package admin new FORCE
 v-rebuild-user admin
 v-change-sys-hostname $DOMAIN
-v-add-web-domain-alias admin $DOMAIN www.$DOMAIN
-v-add-letsencrypt-domain admin $DOMAIN www.$DOMAIN
-v-schedule-letsencrypt-domain admin $DOMAIN www.$DOMAIN
+v-add-letsencrypt-domain admin $DOMAIN
+v-schedule-letsencrypt-domain admin $DOMAIN
 v-add-web-domain-ssl-force admin $DOMAIN
-#v-add-web-domain-ssl-preset admin $DOMAIN
 v-add-dns-domain admin $DOMAIN $IP
 v-add-mail-domain admin $DOMAIN
 #v-delete-mail-domain-antivirus admin $DOMAIN
@@ -84,76 +70,37 @@ v-add-mail-account admin $DOMAIN admin $PASSWD
 v-add-mail-account admin $DOMAIN info $PASSWD
 v-add-database admin $DB $DB $DBPASSWD
 v-add-firewall-rule ACCEPT 0.0.0.0/0 449
-v-change-web-domain-backend-tpl admin $DOMAIN new-PHP-7_4
 v-add-letsencrypt-host
 
-wget https://raw.githubusercontent.com/hestiacp/hestiacp/feature/v-restore-user-cpanel/bin/v-restore-user-cpanel -O /usr/local/hestia/bin/v-restore-user-cpanel
-chmod +x /usr/local/hestia/bin/v-restore-user-cpanel
+#wget https://raw.githubusercontent.com/hestiacp/hestiacp/feature/v-restore-user-cpanel/bin/v-restore-user-cpanel -O /usr/local/hestia/bin/v-restore-user-cpanel
+#chmod +x /usr/local/hestia/bin/v-restore-user-cpanel
 wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/proxy3000.stpl -O /usr/local/hestia/data/templates/web/nginx/proxy3000.stpl
 wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestiacp-templates/nginx/proxy3000.tpl -O /usr/local/hestia/data/templates/web/nginx/proxy3000.tpl
 chmod 755 /usr/local/hestia/data/templates/web/nginx/proxy3000.tpl /usr/local/hestia/data/templates/web/nginx/proxy3000.stpl
 
-#FIX FM
-grep -rl "directoryPerm = 0744" /usr/local/hestia/web/fm/vendor/league/flysystem-sftp | xargs perl -p -i -e 's/directoryPerm = 0744/directoryPerm = 0755/g'
-cat > fm_tmp << HERE
-                                <!-- File Manager Alt -->
-                  <?php if ((\$_SESSION['userContext'] === 'admin') && (\$_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes') || (\$_SESSION['user'] === 'admin')) {?>
-                                <?php if ((\$_SESSION['userContext'] === 'admin') && (!empty(\$_SESSION['look']))) {?>
-                                        <!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
-                                <?php } else { ?>
-                        <?php if ((isset(\$_SESSION['FILE_MANAGER'])) && (!empty(\$_SESSION['FILE_MANAGER'])) && (\$_SESSION['FILE_MANAGER'] == "true")) {?>
-                                <?php if ((\$_SESSION['userContext'] === 'admin') && (isset(\$_SESSION['look']) && (\$_SESSION['look'] === 'admin') && (\$_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
-                                                <!-- Hide file manager when impersonating admin-->
-                                        <?php } else { ?>
-                                                <div class="l-menu__item <?php if(\$TAB == 'FM') echo 'l-menu__item--active' ?>"><a href="/fm1/"><i class="fas fa-folder-open panel-icon"></i><?=_('FileManager');?></a></div>
-                                <?php } ?>
-                        <?php } ?>
-            <?php } ?>
-<?php } ?>
-<!-- File Manager -->
-HERE
-sed -i -e '/File Manager tab/r fm_tmp' /usr/local/hestia/web/templates/includes/panel.html
-rm -f fm_tmp
-mkdir /usr/local/hestia/web/fm1
-cd /usr/local/hestia/web/fm1
-wget https://raw.githubusercontent.com/it-toppp/ultahost/main/fm/index.php
-wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/tinyfilemanager.php
-wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/config-sample.php -O config.php
-wget https://raw.githubusercontent.com/prasathmani/tinyfilemanager/master/translation.json
-chmod 644 config.php tinyfilemanager.php translation.json
-sed -i.bak -e "s/\$root\_path = \$\_SERVER\['DOCUMENT_ROOT'\];/\$root_path = \'\/home\/admin\/web\';/g" config.php
-sed -i 's|max_upload_size_bytes = 2048|max_upload_size_bytes = 10000000000|' config.php
-sed -i 's|timeout: 120000,|timeout: 12000001,|' tinyfilemanager.php
-sed -i 's|"show_hidden":false|"show_hidden":true|' tinyfilemanager.php
-sed -i "s|.*navbar-brand.*|        <a class="navbar-brand" href=\"/\"> Exit </a>|" tinyfilemanager.php
-sed -i 's|use_auth = true|use_auth = false|' config.php
-#sed -i "s|theme = 'light'|theme = \'dark\'|" config.php
+#FM
 mkdir /etc/hestiacp/hooks
 wget https://raw.githubusercontent.com/it-toppp/ultahost/main/hestia_post_install.sh -O /etc/hestiacp/hooks/post_install.sh
 chmod +x /etc/hestiacp/hooks/post_install.sh
+bash /etc/hestiacp/hooks/post_install.sh
 
 #mysql
 cat > /etc/mysql/conf.d/z_custom.cnf << HERE 
 [mysqld]
-query_cache_type = 1
-query_cache_limit = 256K
-query_cache_min_res_unit = 2k
-query_cache_size = 80M
-innodb_buffer_pool_size = 200M
+innodb_buffer_pool_size = 300M
 sql_mode = NO_ENGINE_SUBSTITUTION
-max_heap_table_size  = 256M
 max_allowed_packet = 1024M
-max_connections = 20000
-max_user_connections = 5000
-wait_timeout = 100000
+max_connections = 10000
+max_user_connections = 10000
+wait_timeout = 10000
        
 HERE
 systemctl restart  mysql 1>/dev/null
 echo "Fix MYSQL successfully"
 
 #PHP
-apt-get install -y redis-server php7.4-redis php8.1-redis php7.4-sqlite3 php8.1-sqlite3 php7.4-bcmath php8.1-bcmath php7.4-gmp php8.1-gmp
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
+apt-get install -y redis-server php7.4-redis php8.1-redis php7.4-sqlite3 php8.1-sqlite3 php7.4-bcmath php8.1-bcmath php7.4-gmp php8.1-gmp php7.4-fileinfo php8.1-fileinfo
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 for v in "${multiphp_v[@]}"; do
 cat >>  /etc/php/$v/fpm/php.ini << HERE 
 file_uploads = On
@@ -174,7 +121,7 @@ wget http://downloads2.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.t
 tar zxf ioncube_loaders_lin_x86-64.tar.gz 
 rm -f xf ioncube_loaders_lin_x86-64.tar.gz
 mv ioncube /usr/local 
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.1")
 for v in "${multiphp_v[@]}"; do
 cat > /etc/php/$v/fpm/conf.d/00-ioncube.ini << HERE 
 [Zend Modules]
@@ -236,6 +183,14 @@ sed -i 's|open_file_cache_min_uses.\+|open_file_cache_min_uses 12;|' /etc/nginx/
 systemctl restart nginx 1>/dev/null
 echo "Fix NGINX successfully"
 
+#DEB 
+cp /home/admin/.composer/composer /usr/local/bin/
+curl -sL https://deb.nodesource.com/setup_18.x | bash -
+apt-get install -y nodejs
+npm install pm2 -g 1>/dev/null
+npm install yarn -g 1>/dev/null
+apt-get install ffmpeg -y 1>/dev/null
+
 #SWAP
 if [ ! -f "/swapfile" ]; then
 wget https://raw.githubusercontent.com/it-toppp/Swap/master/swap.sh -O swap  1>/dev/null
@@ -243,19 +198,8 @@ sh swap 2048 1>/dev/null
 rm -Rf swap  1>/dev/null
 fi
 
-#DEB 
-cp /home/admin/.composer/composer /usr/local/bin/
-curl -sL https://deb.nodesource.com/setup_16.x | bash -
-apt-get install -y nodejs
-npm install pm2 -g 1>/dev/null
-npm install yarn -g 1>/dev/null
-apt-get install ffmpeg -y 1>/dev/null
-
 echo "Full installation completed [ OK ]"
 
-if [ ! -z "$SCRIPT" ]; then
-curl -O https://raw.githubusercontent.com/it-toppp/ultahost/main/scripts/scriptsun.sh && bash scriptsun.sh $DOMAIN $SCRIPT $PURSHCODE
-fi
 echo '======================================='
 echo -e "  
 Here is your Control Panel login info:
@@ -277,10 +221,6 @@ PhpMyAdmin:
    https://$DOMAIN/phpmyadmin
    username=root
    $(grep pass /root/.my.cnf | tr --delete \')
-DB:
-   db_name: admin_$DB
-   db_user: admin_$DB
-   db_pass: $DBPASSWD
 " | tee -a /root/.admin
-cd /root && rm -Rf hestiacp.sh scriptsun.sh
+cd /root && rm -Rf hestiacp.sh 
 history -c
