@@ -64,11 +64,9 @@ v-schedule-letsencrypt-domain admin $DOMAIN
 v-add-web-domain-ssl-force admin $DOMAIN
 v-add-dns-domain admin $DOMAIN $IP
 v-add-mail-domain admin $DOMAIN
-#v-delete-mail-domain-antivirus admin $DOMAIN
 v-delete-mail-domain-dkim admin $DOMAIN
 v-add-mail-account admin $DOMAIN admin $PASSWD
 v-add-mail-account admin $DOMAIN info $PASSWD
-v-add-database admin $DB $DB $DBPASSWD
 v-add-firewall-rule ACCEPT 0.0.0.0/0 449
 v-add-letsencrypt-host
 
@@ -189,7 +187,7 @@ curl -sL https://deb.nodesource.com/setup_18.x | bash -
 apt-get install -y nodejs
 npm install pm2 -g 1>/dev/null
 npm install yarn -g 1>/dev/null
-apt-get install ffmpeg -y 1>/dev/null
+apt-get install ffmpeg -y
 
 #SWAP
 if [ ! -f "/swapfile" ]; then
