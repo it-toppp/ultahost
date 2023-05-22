@@ -71,7 +71,8 @@ ln -s /opt/plesk/php/7.4/lib /opt/plesk/php/7.4/lib64
 cat > /root/ip_map_file << HERE
 eth0 79.133.56.100 255.255.255.0 -> eth0 $IP 255.255.255.0
 HERE
-/usr/sbin/plesk bin ipmanage --remap /root/ip_map_file -drop-if-exists
+#/usr/sbin/plesk bin ipmanage --remap /root/ip_map_file -drop-if-exists
+/usr/sbin/plesk bin ipmanage --auto-remap-ip-addresses true
 /usr/sbin/plesk bin server_pref --update -hostname $domain
 /etc/init.d/sw-cp-server restart
 /etc/init.d/sw-engine restart
